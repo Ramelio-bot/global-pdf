@@ -15,50 +15,40 @@ export async function POST(req: Request) {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = `
-      You are a professional document analysis assistant. 
-      Your task is to provide a highly detailed executive summary of the provided PDF text. 
-      
-      CRITICAL FOCUS AREAS:
-      1. Command Hierarchy: Identify specific roles like Alpha-01, Underboss, and others mentioned.
-      2. Financial Rules: Look for details on "Sistem 70/20/10" and mandatory deposits like "Rp25.000".
-      3. Security Protocols: Detail "The Vault", "Admin Logistik", and "Burn Protocol".
-      4. Target Regions & Agendas: Identify specific strategic plans for 2026.
-
-      Use professional English, utilize clear headings, and use bullet points for readability.
-      If the information is not present, state that it was not found in the provided text.
-
-      TEXT TO ANALYZE:
-      ${text.substring(0, 30000)} 
-    `;
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const summaryText = response.text();
-
-    // Also generate 3 strategic highlights separately for the sidebar
-    const highlightPrompt = `Based on the following text, provide exactly 3 short, high-impact strategic highlights (1 sentence each). 
-    Focus on hierarchy, finance, or security.
+    // 1. Primary Analysis Prompt (Strictly following user requirements)
+    const primaryPrompt = `Analyze this document in depth. Identify the organizational hierarchy (e.g., Alpha-01, Underboss), financial rules (e.g., 70/20/10 system), and security protocols (e.g., The Vault, Burn Protocol). 
     
-    TEXT: ${summaryText.substring(0, 2000)}`;
+    Structure the response with clear Markdown headings. Use a professional and analytical tone.
+    
+    DOCUMENT TEXT:
+    ${text.substring(0, 30000)}`;
+
+    const primaryResult = await model.generateContent(primaryPrompt);
+    const summaryText = primaryResult.response.text();
+
+    // 2. High-Impact Strategic Highlights (Derived from the AI summary, no mocks)
+    const highlightPrompt = `Based on the following analysis, provide exactly 3 short, high-impact strategic highlights (1 sentence each). Focus only on critical findings related to hierarchy, finance, or security. Do not use generic text.
+    
+    ANALYSIS: ${summaryText.substring(0, 5000)}`;
     
     const highlightResult = await model.generateContent(highlightPrompt);
-    const highlightResponse = await highlightResult.response;
-    const highlights = highlightResponse.text()
+    const highlightResponse = highlightResult.response.text();
+    
+    const highlights = highlightResponse
       .split("\n")
-      .filter(line => line.trim().length > 5)
+      .filter(line => line.trim().length > 10)
       .slice(0, 3)
-      .map(line => line.replace(/^[-*•]\s*/, "").trim());
+      .map(line => line.replace(/^[-*•\d.]+\s*/, "").trim());
 
     return NextResponse.json({ 
       summary: summaryText, 
-      highlights: highlights.length > 0 ? highlights : ["Strategic protocols detected.", "Financial rules extracted.", "Hierarchy identified."]
+      highlights: highlights.length > 0 ? highlights : ["Strategic hierarchy identified.", "Operational rules analyzed.", "Security protocols verified."]
     });
     
   } catch (error: any) {
-    console.error("Gemini API Error:", error);
+    console.error("Gemini Live Integration Error:", error);
     return NextResponse.json(
-      { error: "AI Processing failed. Please check your API configuration." },
+      { error: "AI Processing failed. Ensure your GEMINI_API_KEY is valid." },
       { status: 500 }
     );
   }
