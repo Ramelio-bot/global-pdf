@@ -83,42 +83,69 @@ export default function Home() {
   })).filter(cat => cat.items.length > 0);
 
   return (
-    <div className="min-h-screen bg-white font-sans">
-      {/* Hero Section */}
-      <section className="bg-[#F5F5FA] py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-5xl font-black text-gray-900 mb-6 tracking-tight"
+    <div className="min-h-screen bg-white font-sans overflow-x-hidden">
+      {/* Luxury Hero Section */}
+      <section className="relative py-28 px-4 overflow-hidden">
+        {/* Dynamic Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#8b0000] via-[#4a0000] to-[#121212] z-0"></div>
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.4, 0.3] 
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute -top-1/2 -left-1/4 w-[150%] h-[150%] bg-[radial-gradient(circle,rgba(220,38,38,0.2)_0%,transparent_70%)] z-0"
+        />
+
+        <div className="max-w-5xl mx-auto text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-block mb-6 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-red-200 text-xs font-bold uppercase tracking-[0.3em]"
           >
-            Semua Alat PDF dalam Satu Atap
+            Digital Ecosystem
+          </motion.div>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-6xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-none"
+          >
+            Luxury Experience <br/> <span className="text-red-500">Document Mastery.</span>
           </motion.h1>
+          
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xl text-gray-600 mb-10 font-medium"
+            className="text-xl text-gray-300 mb-12 font-medium max-w-2xl mx-auto"
           >
-            Solusi PDF premium, 100% Gratis, Cepat, dan Mengutamakan Privasi.
+            The world's most powerful client-side PDF suite. 100% Secure, Infinite Access, Part of Daniel's Digital Ecosystem.
           </motion.p>
           
-          <div className="relative max-w-2xl mx-auto">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 w-6 h-6" />
-            <input 
-              type="text" 
-              placeholder="Cari fitur PDF... (misal: Merge, OCR, AI)"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-16 pr-6 py-6 rounded-2xl border-none shadow-xl focus:ring-2 focus:ring-red-500 text-lg font-medium outline-none transition-all"
-            />
+          {/* Glassmorphism Search Bar */}
+          <div className="relative max-w-2xl mx-auto group">
+            <div className="absolute inset-0 bg-red-600 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <div className="relative flex items-center bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-2 shadow-2xl overflow-hidden">
+              <Search className="absolute left-6 text-gray-400 w-6 h-6" />
+              <input 
+                type="text" 
+                placeholder="Find a professional tool..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-16 pr-6 py-5 bg-transparent text-white placeholder-gray-400 text-xl font-medium outline-none"
+              />
+            </div>
           </div>
         </div>
+
+        {/* Decorative Red Line (Agribusiness/Culinary Identity) */}
+        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-red-600 to-transparent opacity-50"></div>
       </section>
 
-      {/* Mega Menu / Categories Grid */}
-      <main className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-16">
+      {/* Professional Mega Menu Grid */}
+      <main className="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-20">
           {filteredCategories.map((cat, idx) => (
             <motion.div 
               key={cat.name}
@@ -126,17 +153,21 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
             >
-              <h3 className="text-sm font-black text-gray-400 uppercase tracking-[0.2em] mb-8 pb-4 border-b border-gray-100">
-                {cat.name}
-              </h3>
-              <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-1.5 h-6 bg-red-600 rounded-full"></div>
+                <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.25em]">
+                  {cat.name}
+                </h3>
+              </div>
+              
+              <div className="space-y-3">
                 {cat.items.map((item) => (
                   <Link 
                     key={item.title}
                     href={item.href}
-                    className="group flex items-center gap-4 p-3 rounded-xl hover:bg-red-50 transition-all duration-300"
+                    className="group flex items-center gap-4 p-4 rounded-[24px] bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:border-red-100 hover:-translate-y-1 transition-all duration-300"
                   >
-                    <div className="bg-white shadow-sm border border-gray-100 p-2.5 rounded-lg text-red-600 group-hover:scale-110 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+                    <div className="bg-gray-50 p-2.5 rounded-xl text-red-600 group-hover:scale-110 group-hover:bg-red-600 group-hover:text-white transition-all duration-300 shadow-inner">
                       {item.icon}
                     </div>
                     <span className="font-bold text-gray-700 group-hover:text-red-600 transition-colors">
@@ -151,16 +182,27 @@ export default function Home() {
 
         {filteredCategories.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-xl font-bold text-gray-400">Fitur "{searchQuery}" tidak ditemukan.</p>
+            <p className="text-xl font-bold text-gray-400">Tool "{searchQuery}" not found.</p>
           </div>
         )}
       </main>
 
-      {/* Footer Branding */}
-      <footer className="bg-gray-50 py-12 mt-20 border-t border-gray-100">
+      {/* Global Luxury Footer */}
+      <footer className="bg-white py-20 border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="font-black text-2xl tracking-tighter text-red-600 mb-4 italic">GLOBAL PDF</div>
-          <p className="text-gray-500 font-medium text-sm">© 2024 Global PDF Tools. 100% Privacy-First documents processing.</p>
+          <div className="font-black text-3xl tracking-tighter text-gray-900 mb-6 italic flex items-center justify-center gap-3">
+            <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white not-italic text-sm">GP</div>
+            GLOBAL PDF
+          </div>
+          <p className="text-gray-500 font-bold text-base mb-2">
+            © 2026 Global PDF Tools. Part of Daniel's Digital Ecosystem.
+          </p>
+          <p className="text-gray-400 text-sm font-medium">100% Private & Secure Documents Processing.</p>
+          
+          <div className="flex justify-center gap-8 mt-10">
+            <Link href="/about" className="text-gray-400 hover:text-red-600 font-bold transition-colors">About Us</Link>
+            <Link href="/privacy" className="text-gray-400 hover:text-red-600 font-bold transition-colors">Privacy Policy</Link>
+          </div>
         </div>
       </footer>
     </div>
