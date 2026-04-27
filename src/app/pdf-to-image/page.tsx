@@ -39,8 +39,8 @@ export default function PdfToImagePage() {
       // Import secara dinamis untuk menghindari error SSR (ReferenceError: DOMMatrix is not defined)
       const pdfjsLib = await import("pdfjs-dist");
       
-      // Set worker menggunakan CDN yang sesuai dengan versi pdfjs-dist
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+      // Set worker menggunakan UNPKG yang lebih stabil
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
       const arrayBuffer = await file.arrayBuffer();
       const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
@@ -49,22 +49,27 @@ export default function PdfToImagePage() {
       const imageList: string[] = [];
 
       for (let i = 1; i <= numPages; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2 });
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
+        try {
+          const page = await pdf.getPage(i);
+          const viewport = page.getViewport({ scale: 2 });
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
 
-        if (context) {
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
+          if (context) {
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
 
-          await page.render({ 
-            canvasContext: context, 
-            viewport,
-            canvas: canvas 
-          }).promise;
-          
-          imageList.push(canvas.toDataURL("image/jpeg", 0.9));
+            await page.render({ 
+              canvasContext: context, 
+              viewport,
+              canvas: canvas 
+            }).promise;
+            
+            imageList.push(canvas.toDataURL("image/jpeg", 0.9));
+          }
+        } catch (pageError) {
+          console.error(`Gagal merender halaman ${i}:`, pageError);
+          // Lanjut ke halaman berikutnya jika ada yang gagal merender
         }
         setProgress(Math.round((i / numPages) * 100));
       }
