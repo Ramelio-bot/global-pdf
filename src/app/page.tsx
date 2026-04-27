@@ -1,4 +1,8 @@
-import { FileUp, FileDown, Minimize2, Image as ImageIcon, Shield, FileText, FileSpreadsheet, Presentation, FileType } from "lucide-react";
+import { 
+  FileUp, FileDown, Minimize2, Image as ImageIcon, Shield, 
+  FileText, FileSpreadsheet, Presentation, FileType,
+  RotateCw, Trash2, Type, Hash
+} from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -62,6 +66,30 @@ export default function Home() {
       description: "Convert PDF documents to editable Microsoft Word files easily.",
       icon: <FileType className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
       href: "/pdf-to-word",
+    },
+    {
+      title: "Rotate PDF",
+      description: "Rotate all pages in your PDF document permanently.",
+      icon: <RotateCw className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/rotate-pdf",
+    },
+    {
+      title: "Remove Pages",
+      description: "Delete unwanted pages from your PDF document easily.",
+      icon: <Trash2 className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/remove-pages",
+    },
+    {
+      title: "Add Watermark",
+      description: "Add a text watermark to every page of your PDF for protection.",
+      icon: <Type className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/add-watermark",
+    },
+    {
+      title: "Page Numbers",
+      description: "Add automatic page numbers to your PDF document instantly.",
+      icon: <Hash className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/add-page-numbers",
     },
   ];
 
