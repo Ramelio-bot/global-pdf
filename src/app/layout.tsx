@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Alat PDF gratis terlengkap. Gabungkan, pisahkan, dan ubah PDF secara instan dan 100% aman karena diproses langsung di perangkat Anda tanpa perlu upload ke server.",
 };
 
+import Link from "next/link";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,10 +26,26 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="id"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#F5F5FA]">
+        <main className="flex-grow">{children}</main>
+        <footer className="w-full bg-white border-t border-gray-200 py-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="text-sm font-bold text-gray-500">
+                © {new Date().getFullYear()} Global PDF Tools. 100% Private & Secure.
+              </div>
+              <nav className="flex items-center gap-8 text-sm font-bold text-gray-600">
+                <Link href="/" className="hover:text-red-600 transition-colors">Home</Link>
+                <Link href="/about" className="hover:text-red-600 transition-colors">About Us</Link>
+                <Link href="/privacy" className="hover:text-red-600 transition-colors">Privacy Policy</Link>
+              </nav>
+            </div>
+          </div>
+        </footer>
+      </body>
     </html>
   );
 }

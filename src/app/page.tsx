@@ -89,12 +89,6 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="w-full bg-white border-t border-gray-200 py-8 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 text-center text-sm font-medium text-gray-500">
-          &copy; {new Date().getFullYear()} Global PDF Tools. 100% Secure & Local Processing.
-        </div>
-      </footer>
     </div>
   );
 }

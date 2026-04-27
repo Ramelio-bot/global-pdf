@@ -207,11 +207,6 @@ export default function SplitPdfPage() {
         </div>
       </main>
 
-      <footer className="w-full bg-white border-t border-gray-200 py-8 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 text-center text-sm font-medium text-gray-500">
-          Global PDF Tools: Cepat, Gratis, dan 100% Aman.
-        </div>
-      </footer>
     </div>
   );
 }
