@@ -1,177 +1,168 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import { 
   FileUp, FileDown, Minimize2, Image as ImageIcon, Shield, 
   FileText, FileSpreadsheet, Presentation, FileType,
-  RotateCw, Trash2, Type, Hash,
-  PenTool, Palette, Stamp, Crop
+  RotateCw, Trash2, Type, Hash, PenTool, Palette, Stamp, Crop,
+  Search, ShieldAlert, Archive, Diff, Sparkles, Languages, FileSearch, BrainCircuit
 } from "lucide-react";
-import Link from "next/link";
 
 export default function Home() {
-  const tools = [
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const categories = [
     {
-      title: "Merge PDF",
-      description: "Combine multiple PDFs and images into a single PDF document effortlessly.",
-      icon: <FileUp className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/merge",
+      name: "Organize",
+      items: [
+        { title: "Merge PDF", icon: <FileUp />, href: "/merge" },
+        { title: "Split PDF", icon: <FileDown />, href: "/split-pdf" },
+        { title: "Remove Pages", icon: <Trash2 />, href: "/remove-pages" },
+        { title: "Rotate PDF", icon: <RotateCw />, href: "/rotate-pdf" },
+      ]
     },
     {
-      title: "Split PDF",
-      description: "Extract pages from your PDF or save each page as a separate PDF.",
-      icon: <FileDown className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/split-pdf",
+      name: "Optimize",
+      items: [
+        { title: "Compress PDF", icon: <Minimize2 />, href: "/compress-pdf" },
+        { title: "PDF to PDF/A", icon: <Archive />, href: "/pdf-to-pdfa" },
+      ]
     },
     {
-      title: "Compress PDF",
-      description: "Reduce file size while optimizing for maximal PDF quality.",
-      icon: <Minimize2 className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/compress-pdf",
+      name: "Convert to PDF",
+      items: [
+        { title: "Word to PDF", icon: <FileText />, href: "/word-to-pdf" },
+        { title: "Excel to PDF", icon: <FileSpreadsheet />, href: "/excel-to-pdf" },
+        { title: "PowerPoint to PDF", icon: <Presentation />, href: "/ppt-to-pdf" },
+        { title: "Image to PDF", icon: <ImageIcon />, href: "/image-to-pdf" },
+      ]
     },
     {
-      title: "Image to PDF",
-      description: "Convert JPG, PNG, or TIFF images into PDF documents easily.",
-      icon: <ImageIcon className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/image-to-pdf",
+      name: "Convert from PDF",
+      items: [
+        { title: "PDF to Word", icon: <FileType />, href: "/pdf-to-word" },
+        { title: "PDF to Image", icon: <ImageIcon />, href: "/pdf-to-image" },
+      ]
     },
     {
-      title: "PDF Security",
-      description: "Add passwords and set permissions to protect your PDF documents.",
-      icon: <Shield className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/pdf-security",
+      name: "Edit PDF",
+      items: [
+        { title: "Watermark", icon: <Type />, href: "/add-watermark" },
+        { title: "Page Numbers", icon: <Hash />, href: "/add-page-numbers" },
+        { title: "Sign PDF", icon: <PenTool />, href: "/sign-pdf" },
+        { title: "Grayscale", icon: <Palette />, href: "/pdf-to-grayscale" },
+        { title: "Overlay Image", icon: <Stamp />, href: "/overlay-image" },
+        { title: "Crop PDF", icon: <Crop />, href: "/crop-pdf" },
+        { title: "Redact (Sensor)", icon: <ShieldAlert />, href: "/redact-pdf" },
+      ]
     },
     {
-      title: "PDF to Image",
-      description: "Convert each PDF page into a high-quality JPG image instantly.",
-      icon: <ImageIcon className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/pdf-to-image",
+      name: "Security",
+      items: [
+        { title: "Protect PDF", icon: <Shield />, href: "/pdf-security" },
+        { title: "Unlock PDF", icon: <Shield />, href: "/pdf-security" },
+      ]
     },
     {
-      title: "Word to PDF",
-      description: "Convert Microsoft Word documents to PDF format while preserving layout.",
-      icon: <FileText className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/word-to-pdf",
-    },
-    {
-      title: "Excel to PDF",
-      description: "Convert Excel spreadsheets to professional PDF tables instantly.",
-      icon: <FileSpreadsheet className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/excel-to-pdf",
-    },
-    {
-      title: "PowerPoint to PDF",
-      description: "Convert PPTX presentations to PDF while preserving slide content.",
-      icon: <Presentation className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/ppt-to-pdf",
-    },
-    {
-      title: "PDF to Word",
-      description: "Convert PDF documents to editable Microsoft Word files easily.",
-      icon: <FileType className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/pdf-to-word",
-    },
-    {
-      title: "Rotate PDF",
-      description: "Rotate all pages in your PDF document permanently.",
-      icon: <RotateCw className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/rotate-pdf",
-    },
-    {
-      title: "Remove Pages",
-      description: "Delete unwanted pages from your PDF document easily.",
-      icon: <Trash2 className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/remove-pages",
-    },
-    {
-      title: "Add Watermark",
-      description: "Add a text watermark to every page of your PDF for protection.",
-      icon: <Type className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/add-watermark",
-    },
-    {
-      title: "Page Numbers",
-      description: "Add automatic page numbers to your PDF document instantly.",
-      icon: <Hash className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/add-page-numbers",
-    },
-    {
-      title: "Sign PDF",
-      description: "Draw your signature and place it instantly on your PDF documents.",
-      icon: <PenTool className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/sign-pdf",
-    },
-    {
-      title: "PDF to Grayscale",
-      description: "Convert your PDF to black and white to save printer ink.",
-      icon: <Palette className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/pdf-to-grayscale",
-    },
-    {
-      title: "Overlay Image",
-      description: "Add a logo or stamp image on top of your PDF document.",
-      icon: <Stamp className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/overlay-image",
-    },
-    {
-      title: "Crop PDF",
-      description: "Trim page margins and adjust the visible area of your PDF.",
-      icon: <Crop className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "/crop-pdf",
-    },
+      name: "Intelligence",
+      items: [
+        { title: "OCR PDF", icon: <Languages />, href: "/ocr-pdf" },
+        { title: "Compare PDF", icon: <FileSearch />, href: "/compare-pdf" },
+        { title: "AI Summarizer", icon: <BrainCircuit />, href: "/ai-summarizer" },
+      ]
+    }
   ];
 
+  const filteredCategories = categories.map(cat => ({
+    ...cat,
+    items: cat.items.filter(item => 
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  })).filter(cat => cat.items.length > 0);
+
   return (
-    <div className="min-h-screen bg-[#F5F5FA] flex flex-col font-sans text-gray-800">
-      {/* Header */}
-      <header className="w-full bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="bg-red-600 text-white p-2 rounded-lg group-hover:bg-red-700 transition-colors">
-              <FileUp className="w-6 h-6" />
-            </div>
-            <span className="font-black text-2xl tracking-tight text-gray-900">
-              Global PDF Tools
-            </span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/merge" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">MERGE PDF</Link>
-            <Link href="/split-pdf" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">SPLIT PDF</Link>
-            <Link href="/compress-pdf" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">COMPRESS PDF</Link>
-            <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">ALL PDF TOOLS</Link>
-          </nav>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-grow flex flex-col items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <section className="max-w-3xl mx-auto text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-6 leading-tight">
-            Setiap Alat yang Anda Butuhkan untuk <span className="text-red-600">Mengelola PDF</span>
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-medium">
-            100% Gratis, Cepat, dan Mengutamakan Privasi. Semua pemrosesan dilakukan secara lokal di perangkat Anda tanpa perlu mengunggah ke server.
-          </p>
-        </section>
-
-        {/* Tools Grid Section */}
-        <section className="max-w-6xl w-full mx-auto pb-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-center">
-            {tools.map((tool, index) => (
-              <Link 
-                key={index} 
-                href={tool.href}
-                className="group bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col items-center text-center cursor-pointer"
-              >
-                {tool.icon}
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-red-600 transition-colors">{tool.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  {tool.description}
-                </p>
-              </Link>
-            ))}
+    <div className="min-h-screen bg-white font-sans">
+      {/* Hero Section */}
+      <section className="bg-[#F5F5FA] py-20 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl font-black text-gray-900 mb-6 tracking-tight"
+          >
+            Semua Alat PDF dalam Satu Atap
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-xl text-gray-600 mb-10 font-medium"
+          >
+            Solusi PDF premium, 100% Gratis, Cepat, dan Mengutamakan Privasi.
+          </motion.p>
+          
+          <div className="relative max-w-2xl mx-auto">
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 w-6 h-6" />
+            <input 
+              type="text" 
+              placeholder="Cari fitur PDF... (misal: Merge, OCR, AI)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-16 pr-6 py-6 rounded-2xl border-none shadow-xl focus:ring-2 focus:ring-red-500 text-lg font-medium outline-none transition-all"
+            />
           </div>
-        </section>
+        </div>
+      </section>
+
+      {/* Mega Menu / Categories Grid */}
+      <main className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-16">
+          {filteredCategories.map((cat, idx) => (
+            <motion.div 
+              key={cat.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 }}
+            >
+              <h3 className="text-sm font-black text-gray-400 uppercase tracking-[0.2em] mb-8 pb-4 border-b border-gray-100">
+                {cat.name}
+              </h3>
+              <div className="space-y-4">
+                {cat.items.map((item) => (
+                  <Link 
+                    key={item.title}
+                    href={item.href}
+                    className="group flex items-center gap-4 p-3 rounded-xl hover:bg-red-50 transition-all duration-300"
+                  >
+                    <div className="bg-white shadow-sm border border-gray-100 p-2.5 rounded-lg text-red-600 group-hover:scale-110 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+                      {item.icon}
+                    </div>
+                    <span className="font-bold text-gray-700 group-hover:text-red-600 transition-colors">
+                      {item.title}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {filteredCategories.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-xl font-bold text-gray-400">Fitur "{searchQuery}" tidak ditemukan.</p>
+          </div>
+        )}
       </main>
 
+      {/* Footer Branding */}
+      <footer className="bg-gray-50 py-12 mt-20 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="font-black text-2xl tracking-tighter text-red-600 mb-4 italic">GLOBAL PDF</div>
+          <p className="text-gray-500 font-medium text-sm">© 2024 Global PDF Tools. 100% Privacy-First documents processing.</p>
+        </div>
+      </footer>
     </div>
   );
 }
