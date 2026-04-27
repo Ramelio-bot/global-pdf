@@ -31,7 +31,7 @@ export default function Home() {
       title: "PDF Security",
       description: "Add passwords and set permissions to protect your PDF documents.",
       icon: <Shield className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "#",
+      href: "/pdf-security",
     },
   ];
 
