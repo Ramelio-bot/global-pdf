@@ -68,9 +68,9 @@ export default function Home() {
     {
       name: "Intelligence",
       items: [
-        { title: "OCR PDF", icon: <Languages />, href: "/ocr-pdf" },
-        { title: "Compare PDF", icon: <FileSearch />, href: "/compare-pdf" },
-        { title: "AI Summarizer", icon: <BrainCircuit />, href: "/ai-summarizer" },
+        { title: "OCR PDF", icon: <Languages />, href: "/ocr-pdf", isComingSoon: true },
+        { title: "Compare PDF", icon: <FileSearch />, href: "/compare-pdf", isComingSoon: true },
+        { title: "AI Summarizer", icon: <BrainCircuit />, href: "/ai-summarizer", isComingSoon: true },
       ]
     }
   ];
@@ -164,15 +164,35 @@ export default function Home() {
                 {cat.items.map((item) => (
                   <Link 
                     key={item.title}
-                    href={item.href}
-                    className="group flex items-center gap-4 p-4 rounded-[24px] bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:border-red-100 hover:-translate-y-1 transition-all duration-300"
+                    href={(item as any).isComingSoon ? "#" : item.href}
+                    className={`
+                      group flex items-center gap-4 p-4 rounded-[24px] bg-white border border-gray-100 shadow-sm transition-all duration-300
+                      ${(item as any).isComingSoon 
+                        ? "opacity-50 cursor-not-allowed border-dashed" 
+                        : "hover:shadow-xl hover:border-red-100 hover:-translate-y-1"}
+                    `}
                   >
-                    <div className="bg-gray-50 p-2.5 rounded-xl text-red-600 group-hover:scale-110 group-hover:bg-red-600 group-hover:text-white transition-all duration-300 shadow-inner">
+                    <div className={`
+                      p-2.5 rounded-xl transition-all duration-300 shadow-inner
+                      ${(item as any).isComingSoon 
+                        ? "bg-gray-100 text-gray-400" 
+                        : "bg-gray-50 text-red-600 group-hover:scale-110 group-hover:bg-red-600 group-hover:text-white"}
+                    `}>
                       {item.icon}
                     </div>
-                    <span className="font-bold text-gray-700 group-hover:text-red-600 transition-colors">
-                      {item.title}
-                    </span>
+                    <div className="flex flex-col">
+                      <span className={`
+                        font-bold transition-colors
+                        ${(item as any).isComingSoon ? "text-gray-400" : "text-gray-700 group-hover:text-red-600"}
+                      `}>
+                        {item.title}
+                      </span>
+                      {(item as any).isComingSoon && (
+                        <span className="text-[10px] font-black text-red-500 uppercase tracking-tighter">
+                          Neural Engine 2026 - Coming Soon
+                        </span>
+                      )}
+                    </div>
                   </Link>
                 ))}
               </div>
