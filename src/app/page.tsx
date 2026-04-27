@@ -13,7 +13,7 @@ export default function Home() {
       title: "Split PDF",
       description: "Extract pages from your PDF or save each page as a separate PDF.",
       icon: <FileDown className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "#",
+      href: "/split-pdf",
     },
     {
       title: "Compress PDF",
@@ -50,7 +50,7 @@ export default function Home() {
           </Link>
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/merge" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">MERGE PDF</Link>
-            <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">SPLIT PDF</Link>
+            <Link href="/split-pdf" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">SPLIT PDF</Link>
             <Link href="/compress-pdf" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">COMPRESS PDF</Link>
             <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">ALL PDF TOOLS</Link>
           </nav>
