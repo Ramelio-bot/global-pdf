@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Global PDF Tools | Free, Fast & Private",
-  description: "The most comprehensive free PDF tools. Merge, split, and convert PDFs instantly and 100% securely because all processing happens directly on your device without server uploads.",
+  title: "Global PDF Tools | Free, Fast & Private Online PDF Editor",
+  description: "The most comprehensive free online PDF tools. Merge, split, compress, and convert PDFs instantly and 100% securely because all processing happens directly on your device without server uploads.",
 };
 
 import Link from "next/link";
