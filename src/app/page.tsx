@@ -7,7 +7,7 @@ export default function Home() {
       title: "Merge PDF",
       description: "Combine multiple PDFs and images into a single PDF document effortlessly.",
       icon: <FileUp className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "#",
+      href: "/merge",
     },
     {
       title: "Split PDF",
@@ -49,7 +49,7 @@ export default function Home() {
             </span>
           </Link>
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">MERGE PDF</Link>
+            <Link href="/merge" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">MERGE PDF</Link>
             <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">SPLIT PDF</Link>
             <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">COMPRESS PDF</Link>
             <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">ALL PDF TOOLS</Link>
