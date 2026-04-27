@@ -32,60 +32,82 @@ export default function WordToPdfPage() {
     setIsConverting(true);
 
     try {
-      // 1. Convert Word to HTML using mammoth
+      // 1. Convert Word to HTML using mammoth with Premium Style Map
       const arrayBuffer = await file.arrayBuffer();
-      const result = await mammoth.convertToHtml({ arrayBuffer });
+      const options = {
+        styleMap: [
+          "p[style-name='Heading 1'] => h1:fresh",
+          "p[style-name='Heading 2'] => h2:fresh",
+          "p[style-name='Heading 3'] => h3:fresh",
+          "p[style-name='Heading 4'] => h4:fresh",
+          "table => table.table-rendered"
+        ]
+      };
+      const result = await mammoth.convertToHtml({ arrayBuffer }, options);
       const htmlContent = result.value;
 
       // 2. Prepare a hidden element to render HTML
-      // We use a temporary container to style the output better for the PDF
       const container = document.createElement("div");
       container.style.position = "fixed";
       container.style.top = "-10000px";
       container.style.left = "-10000px";
-      container.style.width = "800px"; // Simulating A4 width roughly
+      container.style.width = "800px";
       
       const contentElement = document.createElement("div");
       
-      // Injecting professional CSS for better Word to PDF fidelity
+      // Injecting Premium CSS for high-fidelity PDF output
       const styleTemplate = `
         <style>
           .word-content {
             font-family: 'Inter', 'Arial', sans-serif;
-            color: #1a1a1a;
+            color: #000000;
             line-height: 1.6;
             font-size: 11pt;
           }
           .word-content table {
             border-collapse: collapse;
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             page-break-inside: avoid;
           }
           .word-content th, .word-content td {
-            border: 1px solid #ccc;
-            padding: 10px;
+            border: 1px solid #000;
+            padding: 12px;
             text-align: left;
             vertical-align: top;
+            word-wrap: break-word;
           }
           .word-content th {
-            background-color: #f8f9fa;
+            background-color: #f2f2f2;
             font-weight: bold;
+          }
+          .word-content ul, .word-content ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+          }
+          .word-content li {
+            margin-bottom: 5px;
           }
           .word-content img {
             max-width: 100%;
             height: auto;
             display: block;
-            margin: 10px 0;
+            margin: 15px 0;
           }
           .word-content p {
             margin-bottom: 12px;
           }
-          .word-content h1, .word-content h2, .word-content h3 {
-            margin-top: 20px;
-            margin-bottom: 10px;
+          .word-content h1, .word-content h2, .word-content h3, .word-content h4 {
+            margin-top: 25px;
+            margin-bottom: 15px;
             color: #000;
+            font-weight: bold;
+            page-break-after: avoid;
           }
+          .word-content h1 { font-size: 22pt; }
+          .word-content h2 { font-size: 18pt; }
+          .word-content h3 { font-size: 14pt; }
         </style>
       `;
       
@@ -94,15 +116,15 @@ export default function WordToPdfPage() {
       container.appendChild(contentElement);
       document.body.appendChild(container);
 
-      // 3. Convert HTML to PDF using html2pdf.js
+      // 3. Convert HTML to PDF using optimized html2pdf.js
       const html2pdf = (await import("html2pdf.js")).default;
       
       const opt = {
-        margin: 15, // Wider margin (15mm)
+        margin: [15, 15, 15, 15],
         filename: `${file.name.replace(".docx", "")}.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { 
-          scale: 2, 
+          scale: 3, // Sharpness boost for high-res text
           useCORS: true,
           letterRendering: true
         },
