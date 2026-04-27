@@ -1,4 +1,4 @@
-import { FileUp, FileDown, Minimize2, Image as ImageIcon, Shield } from "lucide-react";
+import { FileUp, FileDown, Minimize2, Image as ImageIcon, Shield, FileText } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -38,6 +38,12 @@ export default function Home() {
       description: "Convert each PDF page into a high-quality JPG image instantly.",
       icon: <ImageIcon className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
       href: "/pdf-to-image",
+    },
+    {
+      title: "Word to PDF",
+      description: "Convert Microsoft Word documents to PDF format while preserving layout.",
+      icon: <FileText className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/word-to-pdf",
     },
   ];
 
