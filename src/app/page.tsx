@@ -19,7 +19,7 @@ export default function Home() {
       title: "Compress PDF",
       description: "Reduce file size while optimizing for maximal PDF quality.",
       icon: <Minimize2 className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "#",
+      href: "/compress-pdf",
     },
     {
       title: "Image to PDF",
@@ -51,7 +51,7 @@ export default function Home() {
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/merge" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">MERGE PDF</Link>
             <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">SPLIT PDF</Link>
-            <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">COMPRESS PDF</Link>
+            <Link href="/compress-pdf" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">COMPRESS PDF</Link>
             <Link href="#" className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors">ALL PDF TOOLS</Link>
           </nav>
         </div>
