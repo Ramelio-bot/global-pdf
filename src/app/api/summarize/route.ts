@@ -20,42 +20,30 @@ export async function POST(req: Request) {
       );
     }
 
+    // Initialize Google Generative AI with the official SDK
     const genAI = new GoogleGenerativeAI(apiKey);
+    
+    // Use the specific model name requested: gemini-1.5-flash
+    // The SDK handles the API versioning automatically.
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Precise System Prompt for High-Stakes Analysis
-    const primaryPrompt = `
-      Analyze this document in depth as a Senior Strategic Analyst.
-      
-      SPECIFIC REQUIREMENTS:
-      1. Organizational Hierarchy: Identify and detail roles such as Alpha-01, Underboss, and other specific command structures mentioned.
-      2. Financial Rules: Detail the "70/20/10 system" and any specific monetary requirements or deposit protocols.
-      3. Security & Operational Protocols: Detail "The Vault", "Burn Protocol", and "Admin Logistik" procedures.
-      4. Target Regions & Agendas: Identify strategic focus areas, specifically looking for references to "Solo", "Jogja", or key expansion markers for 2026.
-
-      Output Format: Use clean Markdown with sharp headings. Be professional, direct, and exhaustive. 
-      Do NOT use generic or placeholder text. If information is missing, explicitly state "Data not found in source text".
-
-      DOCUMENT TEXT:
-      ${text.substring(0, 35000)} 
-    `;
+    const primaryPrompt = `Analyze this document in depth. Identify the organizational hierarchy (e.g., Alpha-01, Underboss), financial rules (e.g., 70/20/10 system), and security protocols (e.g., The Vault, Burn Protocol). 
+    Focus also on target regions like Solo and Jogja.
+    
+    Structure the response with clear Markdown headings. Use a professional and analytical tone.
+    
+    DOCUMENT TEXT:
+    ${text.substring(0, 35000)}`;
 
     const primaryResult = await model.generateContent(primaryPrompt);
     const summaryText = primaryResult.response.text();
 
-    // Generate 3 High-Impact Highlights directly from the analysis
-    const highlightPrompt = `
-      Based on the following analysis, provide exactly 3 short, high-impact strategic highlights (1 sentence each). 
-      Focus ONLY on Hierarchy, Finance, or Security. 
-      Use active, intelligence-grade language.
-      
-      ANALYSIS: ${summaryText.substring(0, 5000)}
-    `;
+    const highlightPrompt = `Based on the following analysis, provide exactly 3 short, high-impact strategic highlights (1 sentence each). Focus only on critical findings related to hierarchy, finance, or security.
+    
+    ANALYSIS: ${summaryText.substring(0, 5000)}`;
     
     const highlightResult = await model.generateContent(highlightPrompt);
-    const highlightResponse = highlightResult.response.text();
-    
-    const highlights = highlightResponse
+    const highlights = highlightResult.response.text()
       .split("\n")
       .filter(line => line.trim().length > 10)
       .slice(0, 3)
@@ -67,10 +55,11 @@ export async function POST(req: Request) {
     });
     
   } catch (error: any) {
-    console.error("Gemini Critical Error:", error);
+    console.error("Gemini API Error (404/Auth):", error);
+    // Return the actual error message for debugging as requested
     return NextResponse.json(
-      { error: `Internal API Error: ${error.message || "Unknown Failure"}` },
-      { status: 500 }
+      { error: `Gemini API Error: ${error.message || "Internal Failure"}` },
+      { status: error.status || 500 }
     );
   }
 }
