@@ -8,6 +8,7 @@ import Link from "next/link";
 export default function MergePage() {
   const [files, setFiles] = useState<File[]>([]);
   const [isMerging, setIsMerging] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -77,7 +78,29 @@ export default function MergePage() {
 
           {/* Upload Box */}
           <div className="relative group">
-            <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-2xl bg-white hover:bg-gray-50 hover:border-red-400 transition-all cursor-pointer shadow-sm group-hover:shadow-md">
+            <label 
+              className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-2xl transition-all cursor-pointer shadow-sm group-hover:shadow-md
+                ${isDragging ? "bg-red-50 border-red-500" : "bg-white border-gray-300 hover:bg-gray-50 hover:border-red-400"}
+              `}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={(e) => {
+                e.preventDefault();
+                setIsDragging(false);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDragging(false);
+                if (e.dataTransfer.files) {
+                  const droppedFiles = Array.from(e.dataTransfer.files).filter(
+                    (file) => file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
+                  );
+                  setFiles((prev) => [...prev, ...droppedFiles]);
+                }
+              }}
+            >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 <div className="bg-red-50 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
                   <FileUp className="w-10 h-10 text-red-600" />
