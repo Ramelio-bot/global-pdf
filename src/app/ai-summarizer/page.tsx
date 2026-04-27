@@ -167,9 +167,11 @@ export default function AiSummarizerPage() {
                 <div className="flex flex-col lg:flex-row gap-10">
                   <div className="flex-grow">
                     <div className="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-inner prose prose-slate max-w-none">
-                      <ReactMarkdown className="markdown-content">
-                        {summary}
-                      </ReactMarkdown>
+                      <div className="markdown-content">
+                        <ReactMarkdown>
+                          {summary}
+                        </ReactMarkdown>
+                      </div>
                     </div>
                   </div>
 
