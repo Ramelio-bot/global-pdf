@@ -59,13 +59,14 @@ export default function AiSummarizerPage() {
 
       setProcessingStep("Compiling Strategic Intelligence...");
       const data = await response.json();
+      console.log("Raw API Response:", data);
       
       setSummary(data.summary);
-      setStrategicHighlights(data.highlights);
+      setStrategicHighlights(data.highlights || []);
       
     } catch (error: any) {
       console.error("AI Analysis Error:", error);
-      setErrorMessage(error.message || "An unexpected error occurred during analysis.");
+      setErrorMessage(`Error: ${error.message || "Unknown error occurred"}`);
     } finally {
       setIsProcessing(false);
       setProcessingStep("");

@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ 
       summary: summaryText, 
-      highlights: highlights.length > 0 ? highlights : ["Strategic hierarchy identified.", "Operational rules analyzed.", "Security protocols verified."]
+      highlights: highlights 
     });
     
   } catch (error: any) {
