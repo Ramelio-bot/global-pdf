@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import mammoth from "mammoth";
 import { FileUp, ArrowLeft, FileText, Loader2, Download, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
@@ -32,113 +31,53 @@ export default function WordToPdfPage() {
     setIsConverting(true);
 
     try {
-      // 1. Convert Word to HTML using mammoth with Premium Style Map
-      const arrayBuffer = await file.arrayBuffer();
-      const options = {
-        styleMap: [
-          "p[style-name='Heading 1'] => h1:fresh",
-          "p[style-name='Heading 2'] => h2:fresh",
-          "p[style-name='Heading 3'] => h3:fresh",
-          "p[style-name='Heading 4'] => h4:fresh",
-          "table => table.table-rendered"
-        ]
-      };
-      const result = await mammoth.convertToHtml({ arrayBuffer }, options);
-      const htmlContent = result.value;
+      // Dynamic imports untuk pustaka browser agar tidak error saat SSR
+      const { renderAsync } = await import("docx-preview");
+      const html2pdf = (await import("html2pdf.js")).default;
 
-      // 2. Prepare a hidden element to render HTML
+      // 1. Buat kontainer tersembunyi untuk rendering high-fidelity
       const container = document.createElement("div");
+      container.id = "docx-container";
       container.style.position = "fixed";
       container.style.top = "-10000px";
       container.style.left = "-10000px";
-      container.style.width = "800px";
-      
-      const contentElement = document.createElement("div");
-      
-      // Injecting Premium CSS for high-fidelity PDF output
-      const styleTemplate = `
-        <style>
-          .word-content {
-            font-family: 'Inter', 'Arial', sans-serif;
-            color: #000000;
-            line-height: 1.6;
-            font-size: 11pt;
-          }
-          .word-content table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 25px;
-            page-break-inside: avoid;
-          }
-          .word-content th, .word-content td {
-            border: 1px solid #000;
-            padding: 12px;
-            text-align: left;
-            vertical-align: top;
-            word-wrap: break-word;
-          }
-          .word-content th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-          }
-          .word-content ul, .word-content ol {
-            margin-left: 25px;
-            margin-bottom: 15px;
-            page-break-inside: avoid;
-          }
-          .word-content li {
-            margin-bottom: 5px;
-          }
-          .word-content img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 15px 0;
-          }
-          .word-content p {
-            margin-bottom: 12px;
-          }
-          .word-content h1, .word-content h2, .word-content h3, .word-content h4 {
-            margin-top: 25px;
-            margin-bottom: 15px;
-            color: #000;
-            font-weight: bold;
-            page-break-after: avoid;
-          }
-          .word-content h1 { font-size: 22pt; }
-          .word-content h2 { font-size: 18pt; }
-          .word-content h3 { font-size: 14pt; }
-        </style>
-      `;
-      
-      contentElement.innerHTML = `${styleTemplate}<div class="word-content">${htmlContent}</div>`;
-
-      container.appendChild(contentElement);
+      container.style.width = "816px"; // Standar lebar A4 @ 96dpi
+      container.style.backgroundColor = "white";
       document.body.appendChild(container);
 
-      // 3. Convert HTML to PDF using optimized html2pdf.js
-      const html2pdf = (await import("html2pdf.js")).default;
-      
+      // 2. Render file Word (.docx) langsung ke DOM menggunakan docx-preview
+      const arrayBuffer = await file.arrayBuffer();
+      await renderAsync(arrayBuffer, container, undefined, {
+        className: "docx-preview-content",
+        inWrapper: false,
+        ignoreLastRenderedPageBreak: false,
+        useBase64URL: true,
+      });
+
+      // 3. Konversi hasil render DOM tersebut menjadi PDF
       const opt = {
-        margin: [15, 15, 15, 15],
+        margin: [0, 0, 0, 0], // docx-preview sudah menangani margin dokumen asli
         filename: `${file.name.replace(".docx", "")}.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { 
-          scale: 3, // Sharpness boost for high-res text
+          scale: 3, // Ketajaman premium (sangat tajam saat di-zoom)
           useCORS: true,
-          letterRendering: true
+          letterRendering: true,
+          scrollX: 0,
+          scrollY: 0
         },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
       };
 
-      await html2pdf().from(contentElement).set(opt as any).save();
+      // Simpan sebagai PDF
+      await html2pdf().from(container).set(opt as any).save();
       
-      // Cleanup
+      // Bersihkan DOM
       document.body.removeChild(container);
       setIsDone(true);
     } catch (error) {
       console.error("Error converting Word to PDF:", error);
-      alert("Terjadi kesalahan saat mengonversi file Word. Pastikan file tidak diproteksi password.");
+      alert("Gagal mengonversi file Word. Pastikan file dokumen valid dan tidak rusak.");
     } finally {
       setIsConverting(false);
     }
@@ -163,7 +102,7 @@ export default function WordToPdfPage() {
         <div className="max-w-3xl w-full">
           <div className="text-center mb-10">
             <h1 className="text-3xl font-black text-gray-900 mb-4">Ubah Word ke PDF</h1>
-            <p className="text-gray-600">Ubah dokumen Word (.docx) Anda menjadi file PDF profesional secara instan di browser Anda.</p>
+            <p className="text-gray-600">Konversi dokumen Word (.docx) dengan akurasi tata letak maksimal menggunakan mesin High-Fidelity.</p>
           </div>
 
           {/* Upload Box */}
@@ -196,7 +135,7 @@ export default function WordToPdfPage() {
                     <FileUp className="w-10 h-10 text-gray-400" />
                   </div>
                   <p className="mb-2 text-lg font-bold text-gray-700">Klik atau seret file Word (.docx) di sini</p>
-                  <p className="text-sm text-gray-500 font-medium">Privasi terjamin dengan pemrosesan murni lokal</p>
+                  <p className="text-sm text-gray-500 font-medium">Layout asli akan dipertahankan sepenuhnya</p>
                 </div>
               )}
               <input type="file" className="hidden" accept=".docx" onChange={handleFileChange} />
