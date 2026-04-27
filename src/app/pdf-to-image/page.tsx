@@ -25,7 +25,7 @@ export default function PdfToImagePage() {
       setImages([]);
       setProgress(0);
     } else if (selectedFile) {
-      alert("Hanya file PDF yang diperbolehkan.");
+      alert("Only PDF files are allowed.");
     }
   };
 
@@ -36,10 +36,10 @@ export default function PdfToImagePage() {
     setProgress(0);
 
     try {
-      // Import secara dinamis untuk menghindari error SSR (ReferenceError: DOMMatrix is not defined)
+      // Dynamic import to avoid SSR errors
       const pdfjsLib = await import("pdfjs-dist");
       
-      // Set worker menggunakan UNPKG yang lebih stabil
+      // Set worker using a stable UNPKG source
       pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
       const arrayBuffer = await file.arrayBuffer();
@@ -68,8 +68,7 @@ export default function PdfToImagePage() {
             imageList.push(canvas.toDataURL("image/jpeg", 0.9));
           }
         } catch (pageError) {
-          console.error(`Gagal merender halaman ${i}:`, pageError);
-          // Lanjut ke halaman berikutnya jika ada yang gagal merender
+          console.error(`Failed to render page ${i}:`, pageError);
         }
         setProgress(Math.round((i / numPages) * 100));
       }
@@ -77,7 +76,7 @@ export default function PdfToImagePage() {
       setImages(imageList);
     } catch (error) {
       console.error("Error converting PDF to images:", error);
-      alert("Terjadi kesalahan saat mengonversi PDF ke gambar. Pastikan file tidak rusak.");
+      alert("An error occurred while converting PDF to images. Please ensure the file is not corrupted.");
     } finally {
       setIsProcessing(false);
     }
@@ -98,7 +97,7 @@ export default function PdfToImagePage() {
     
     images.forEach((url, index) => {
       const base64Data = url.split(",")[1];
-      zip.file(`halaman_${index + 1}.jpg`, base64Data, { base64: true });
+      zip.file(`page_${index + 1}.jpg`, base64Data, { base64: true });
     });
 
     const content = await zip.generateAsync({ type: "blob" });
@@ -119,7 +118,7 @@ export default function PdfToImagePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Kembali ke Beranda</span>
+            <span className="font-semibold">Back to Home</span>
           </Link>
           <div className="font-black text-xl tracking-tight text-gray-900">
             PDF to Image
@@ -131,8 +130,8 @@ export default function PdfToImagePage() {
       <main className="flex-grow flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl w-full">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-4">Ubah PDF ke Gambar</h1>
-            <p className="text-gray-600">Ekstrak setiap halaman PDF menjadi gambar JPG berkualitas tinggi dalam sekejap.</p>
+            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Convert PDF to Images</h1>
+            <p className="text-gray-600">Extract every PDF page into high-quality JPG images instantly.</p>
           </div>
 
           {!images.length ? (
@@ -140,15 +139,15 @@ export default function PdfToImagePage() {
               <div className="relative group mb-8">
                 <label 
                   className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-2xl transition-all cursor-pointer shadow-sm
-                    ${isDragging ? "bg-red-50 border-red-500" : "bg-white border-gray-300 hover:bg-gray-50 hover:border-red-400"}
+                    ${isDragging ? "bg-red-50 border-red-500" : "bg-white border-gray-300 hover:bg-gray-50 hover:border-red-400 shadow-inner"}
                   `}
                   onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                   onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
                   onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFileChange(e); }}
                 >
                   {file ? (
-                    <div className="flex flex-col items-center p-4 text-center">
-                      <div className="bg-red-100 p-4 rounded-full mb-4">
+                    <div className="flex flex-col items-center p-4 text-center animate-in zoom-in-95">
+                      <div className="bg-red-100 p-4 rounded-full mb-4 shadow-inner">
                         <ImageIcon className="w-10 h-10 text-red-600" />
                       </div>
                       <p className="text-lg font-bold text-gray-900 mb-1 truncate max-w-xs">{file.name}</p>
@@ -156,15 +155,15 @@ export default function PdfToImagePage() {
                         onClick={(e) => { e.preventDefault(); setFile(null); }}
                         className="mt-4 text-sm font-bold text-red-500 hover:underline"
                       >
-                        Ganti File
+                        Change File
                       </button>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <div className="bg-gray-100 p-4 rounded-full mb-4">
-                        <FileUp className="w-10 h-10 text-gray-400" />
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6 group-hover:scale-105 transition-all duration-300">
+                      <div className="bg-gray-100 p-4 rounded-full mb-4 shadow-inner">
+                        <FileUp className="w-10 h-10 text-gray-400 group-hover:text-red-500 transition-colors" />
                       </div>
-                      <p className="mb-2 text-lg font-bold text-gray-700">Klik atau seret file PDF di sini</p>
+                      <p className="mb-2 text-lg font-bold text-gray-700 tracking-tight">Click or drag PDF file here</p>
                     </div>
                   )}
                   <input type="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
@@ -185,12 +184,12 @@ export default function PdfToImagePage() {
                   {isProcessing ? (
                     <>
                       <Loader2 className="w-6 h-6 animate-spin" />
-                      Memproses ({progress}%)
+                      Processing ({progress}%)
                     </>
                   ) : (
                     <>
                       <ImageIcon className="w-6 h-6" />
-                      Konversi ke Gambar
+                      Convert to Images
                     </>
                   )}
                 </button>
@@ -198,22 +197,22 @@ export default function PdfToImagePage() {
             </div>
           ) : (
             <div className="animate-in fade-in slide-in-from-bottom-4">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">Hasil Konversi</h2>
-                  <p className="text-sm text-gray-500 font-medium">{images.length} Halaman berhasil dikonversi</p>
+                  <h2 className="text-xl font-bold text-gray-900 tracking-tight">Conversion Results</h2>
+                  <p className="text-sm text-gray-500 font-bold">{images.length} Pages successfully converted</p>
                 </div>
                 <div className="flex gap-3">
                   <button
                     onClick={downloadAllAsZip}
-                    className="flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-700 transition-all shadow-md active:scale-95"
+                    className="flex items-center gap-2 bg-red-600 text-white px-8 py-4 rounded-xl font-black hover:bg-red-700 transition-all shadow-lg active:scale-95"
                   >
                     <Archive className="w-5 h-5" />
                     Download All as ZIP
                   </button>
                   <button
                     onClick={() => { setImages([]); setFile(null); }}
-                    className="flex items-center gap-2 bg-gray-100 text-gray-600 px-6 py-3 rounded-xl font-bold hover:bg-gray-200 transition-all active:scale-95"
+                    className="flex items-center gap-2 bg-gray-100 text-gray-600 px-8 py-4 rounded-xl font-black hover:bg-gray-200 transition-all active:scale-95"
                   >
                     <Trash2 className="w-5 h-5" />
                     Reset
@@ -223,16 +222,16 @@ export default function PdfToImagePage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {images.map((url, index) => (
-                  <div key={index} className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all">
-                    <div className="aspect-[3/4] relative overflow-hidden bg-gray-50">
-                      <img src={url} alt={`Halaman ${index + 1}`} className="w-full h-full object-contain p-2" />
+                  <div key={index} className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-2xl transition-all">
+                    <div className="aspect-[3/4] relative overflow-hidden bg-gray-50 border-b border-gray-50">
+                      <img src={url} alt={`Page ${index + 1}`} className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500" />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors pointer-events-none" />
                     </div>
-                    <div className="p-4 flex items-center justify-between border-t border-gray-50">
-                      <span className="font-bold text-sm text-gray-700">Halaman {index + 1}</span>
+                    <div className="p-4 flex items-center justify-between bg-white">
+                      <span className="font-bold text-sm text-gray-700 tracking-tight">Page {index + 1}</span>
                       <button
                         onClick={() => downloadImage(url, index)}
-                        className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                        className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm"
                         title="Download JPG"
                       >
                         <Download className="w-5 h-5" />

@@ -23,13 +23,13 @@ export default function PdfSecurityPage() {
     if (selectedFile && selectedFile.type === "application/pdf") {
       setFile(selectedFile);
     } else if (selectedFile) {
-      alert("Hanya file PDF yang diperbolehkan.");
+      alert("Only PDF files are allowed.");
     }
   };
 
   const handleProtect = async () => {
     if (!file || !password) {
-      alert("Silakan pilih file dan masukkan password.");
+      alert("Please select a file and enter a password.");
       return;
     }
     setIsProcessing(true);
@@ -38,7 +38,6 @@ export default function PdfSecurityPage() {
       const fileBytes = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(fileBytes);
       
-      // Protect the PDF with userPassword, ownerPassword and restricted permissions
       const protectedPdfBytes = await pdfDoc.save({ 
         userPassword: password,
         ownerPassword: password,
@@ -56,7 +55,7 @@ export default function PdfSecurityPage() {
       downloadPdf(protectedPdfBytes, `protected_${file.name}`);
     } catch (error) {
       console.error("Error protecting PDF:", error);
-      alert("Terjadi kesalahan saat mengunci PDF.");
+      alert("An error occurred while locking the PDF.");
     } finally {
       setIsProcessing(false);
     }
@@ -64,24 +63,21 @@ export default function PdfSecurityPage() {
 
   const handleUnlock = async () => {
     if (!file || !password) {
-      alert("Silakan pilih file dan masukkan password.");
+      alert("Please select a file and enter a password.");
       return;
     }
     setIsProcessing(true);
 
     try {
       const fileBytes = await file.arrayBuffer();
-      // Load PDF with the provided password
-      // If the password is wrong, PDFDocument.load will throw an error
       const pdfDoc = await PDFDocument.load(fileBytes, { password } as any);
       
-      // Save without password to unlock it
       const unlockedPdfBytes = await pdfDoc.save();
       
       downloadPdf(unlockedPdfBytes, `unlocked_${file.name}`);
     } catch (error) {
       console.error("Error unlocking PDF:", error);
-      alert("Gagal membuka PDF. Password yang Anda masukkan salah atau file tidak terenkripsi.");
+      alert("Failed to unlock PDF. The password you entered is incorrect or the file is not encrypted.");
     } finally {
       setIsProcessing(false);
     }
@@ -105,7 +101,7 @@ export default function PdfSecurityPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Kembali ke Beranda</span>
+            <span className="font-semibold">Back to Home</span>
           </Link>
           <div className="font-black text-xl tracking-tight text-gray-900">
             PDF Security
@@ -117,16 +113,16 @@ export default function PdfSecurityPage() {
       <main className="flex-grow flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl w-full">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-4">Keamanan PDF</h1>
-            <p className="text-gray-600">Lindungi dokumen Anda dengan kata sandi atau buka kunci PDF yang terproteksi.</p>
+            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">PDF Security Suite</h1>
+            <p className="text-gray-600">Protect your documents with a password or unlock protected PDF files instantly.</p>
           </div>
 
           {/* Tabs */}
-          <div className="flex p-1 bg-gray-200 rounded-xl mb-10">
+          <div className="flex p-1 bg-gray-200 rounded-xl mb-10 shadow-inner">
             <button
               onClick={() => { setActiveTab("protect"); setFile(null); setPassword(""); }}
               className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-bold transition-all ${
-                activeTab === "protect" ? "bg-white text-red-600 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                activeTab === "protect" ? "bg-white text-red-600 shadow-lg scale-105" : "text-gray-500 hover:text-gray-700"
               }`}
             >
               <Lock className="w-5 h-5" />
@@ -135,7 +131,7 @@ export default function PdfSecurityPage() {
             <button
               onClick={() => { setActiveTab("unlock"); setFile(null); setPassword(""); }}
               className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-bold transition-all ${
-                activeTab === "unlock" ? "bg-white text-red-600 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                activeTab === "unlock" ? "bg-white text-red-600 shadow-lg scale-105" : "text-gray-500 hover:text-gray-700"
               }`}
             >
               <Unlock className="w-5 h-5" />
@@ -144,31 +140,31 @@ export default function PdfSecurityPage() {
           </div>
 
           {/* Action Box */}
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4">
             <div className="mb-8">
               <label 
                 className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-2xl transition-all cursor-pointer
-                  ${isDragging ? "bg-red-50 border-red-500" : "bg-gray-50 border-gray-300 hover:bg-white hover:border-red-400"}
+                  ${isDragging ? "bg-red-50 border-red-500" : "bg-gray-50 border-gray-300 hover:bg-white hover:border-red-400 shadow-inner"}
                 `}
                 onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                 onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
                 onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFileChange(e); }}
               >
                 {file ? (
-                  <div className="flex flex-col items-center p-4">
+                  <div className="flex flex-col items-center p-4 text-center animate-in zoom-in-95">
                     <ShieldCheck className="w-12 h-12 text-green-500 mb-2" />
                     <span className="text-sm font-bold text-gray-700 text-center truncate max-w-xs">{file.name}</span>
                     <button 
                       onClick={(e) => { e.preventDefault(); setFile(null); }}
                       className="mt-2 text-xs font-bold text-red-500 hover:underline"
                     >
-                      Ganti File
+                      Change File
                     </button>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center pt-5 pb-6">
                     <FileUp className="w-10 h-10 text-gray-400 mb-3" />
-                    <p className="text-sm font-bold text-gray-500">Klik atau seret file PDF di sini</p>
+                    <p className="text-sm font-bold text-gray-500 tracking-tight">Click or drag PDF file here</p>
                   </div>
                 )}
                 <input type="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
@@ -176,8 +172,8 @@ export default function PdfSecurityPage() {
             </div>
 
             <div className="mb-8">
-              <label className="block text-sm font-bold text-gray-700 mb-2">
-                {activeTab === "protect" ? "Masukkan Password Baru" : "Masukkan Password PDF Saat Ini"}
+              <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">
+                {activeTab === "protect" ? "Enter New Password" : "Enter Current PDF Password"}
               </label>
               <div className="relative">
                 <input
@@ -185,7 +181,7 @@ export default function PdfSecurityPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password..."
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all font-bold shadow-sm"
                 />
                 <div className="absolute inset-y-0 right-4 flex items-center">
                   {activeTab === "protect" ? (
@@ -196,8 +192,8 @@ export default function PdfSecurityPage() {
                 </div>
               </div>
               {activeTab === "protect" && (
-                <p className="mt-2 text-xs text-gray-500 italic">
-                  *Penting: Simpan password Anda dengan baik. Kami tidak menyimpan password Anda.
+                <p className="mt-4 text-xs text-gray-500 italic font-bold">
+                  *Important: Secure your password. We do not store or recover passwords.
                 </p>
               )}
             </div>
@@ -215,24 +211,23 @@ export default function PdfSecurityPage() {
               {isProcessing ? (
                 <>
                   <Loader2 className="w-6 h-6 animate-spin" />
-                  Memproses...
+                  Processing...
                 </>
               ) : activeTab === "protect" ? (
                 <>
                   <ShieldCheck className="w-6 h-6" />
-                  Lindungi PDF
+                  Protect PDF
                 </>
               ) : (
                 <>
                   <ShieldAlert className="w-6 h-6" />
-                  Buka Kunci PDF
+                  Unlock PDF
                 </>
               )}
             </button>
           </div>
         </div>
       </main>
-
     </div>
   );
 }

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Global PDF Tools | Free, Fast & Private",
-  description: "Alat PDF gratis terlengkap. Gabungkan, pisahkan, dan ubah PDF secara instan dan 100% aman karena diproses langsung di perangkat Anda tanpa perlu upload ke server.",
+  description: "The most comprehensive free PDF tools. Merge, split, and convert PDFs instantly and 100% securely because all processing happens directly on your device without server uploads.",
 };
 
 import Link from "next/link";
@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="id"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#F5F5FA]">
@@ -35,7 +35,7 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-sm font-bold text-gray-500">
-                © {new Date().getFullYear()} Global PDF Tools. 100% Private & Secure.
+                © 2026 Global PDF Tools. 100% Private & Secure.
               </div>
               <nav className="flex items-center gap-8 text-sm font-bold text-gray-600">
                 <Link href="/" className="hover:text-red-600 transition-colors">Home</Link>

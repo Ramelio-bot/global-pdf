@@ -103,7 +103,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             className="inline-block mb-6 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-red-200 text-xs font-bold uppercase tracking-[0.3em]"
           >
-            Digital Ecosystem
+            Privacy First
           </motion.div>
           
           <motion.h1 
@@ -120,7 +120,7 @@ export default function Home() {
             transition={{ delay: 0.1 }}
             className="text-xl text-gray-300 mb-12 font-medium max-w-2xl mx-auto"
           >
-            The world's most powerful client-side PDF suite. 100% Secure, Infinite Access, Part of Daniel's Digital Ecosystem.
+            The world's most powerful client-side PDF suite. 100% Secure, Private, and High-Performance Document Processing.
           </motion.p>
           
           {/* Glassmorphism Search Bar */}
@@ -139,7 +139,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Decorative Red Line (Agribusiness/Culinary Identity) */}
+        {/* Decorative Red Line */}
         <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-red-600 to-transparent opacity-50"></div>
       </section>
 
@@ -195,7 +195,7 @@ export default function Home() {
             GLOBAL PDF
           </div>
           <p className="text-gray-500 font-bold text-base mb-2">
-            © 2026 Global PDF Tools. Part of Daniel's Digital Ecosystem.
+            © 2026 Global PDF Tools. 100% Private & Secure.
           </p>
           <p className="text-gray-400 text-sm font-medium">100% Private & Secure Documents Processing.</p>
           

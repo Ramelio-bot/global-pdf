@@ -32,10 +32,10 @@ export default function SplitPdfPage() {
         setEndPage(count);
       } catch (error) {
         console.error("Error reading PDF:", error);
-        alert("Gagal membaca file PDF.");
+        alert("Failed to read PDF file.");
       }
     } else if (selectedFile) {
-      alert("Hanya file PDF yang diperbolehkan.");
+      alert("Only PDF files are allowed.");
     }
   };
 
@@ -44,7 +44,7 @@ export default function SplitPdfPage() {
     
     // Validation
     if (startPage < 1 || endPage > totalPages || startPage > endPage) {
-      alert(`Rentang halaman tidak valid. Masukkan antara 1 sampai ${totalPages}.`);
+      alert(`Invalid page range. Please enter between 1 and ${totalPages}.`);
       return;
     }
 
@@ -70,14 +70,14 @@ export default function SplitPdfPage() {
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = `splitted_${startPage}_to_${endPage}.pdf`;
+      link.download = `split_${startPage}_to_${endPage}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error splitting PDF:", error);
-      alert("Terjadi kesalahan saat memisahkan PDF.");
+      alert("An error occurred while splitting the PDF.");
     } finally {
       setIsSplitting(false);
     }
@@ -89,7 +89,7 @@ export default function SplitPdfPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Kembali ke Beranda</span>
+            <span className="font-semibold">Back to Home</span>
           </Link>
           <div className="font-black text-xl tracking-tight text-gray-900">
             Split PDF
@@ -101,8 +101,8 @@ export default function SplitPdfPage() {
       <main className="flex-grow flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl w-full">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-4">Pisahkan PDF</h1>
-            <p className="text-gray-600">Ambil rentang halaman tertentu dari dokumen PDF Anda dengan cepat.</p>
+            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Split PDF File</h1>
+            <p className="text-gray-600">Extract a specific range of pages from your PDF document quickly.</p>
           </div>
 
           {/* Upload Box */}
@@ -116,29 +116,29 @@ export default function SplitPdfPage() {
               onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFileChange(e); }}
             >
               {file ? (
-                <div className="flex flex-col items-center p-4 text-center">
-                  <div className="bg-red-100 p-4 rounded-full mb-4">
+                <div className="flex flex-col items-center p-4 text-center animate-in zoom-in-95 transition-all">
+                  <div className="bg-red-100 p-4 rounded-full mb-4 shadow-inner">
                     <FileText className="w-10 h-10 text-red-600" />
                   </div>
                   <p className="text-lg font-bold text-gray-900 mb-1 truncate max-w-xs">{file.name}</p>
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
+                  <div className="flex items-center gap-2 text-sm font-bold text-gray-500">
                     <LayoutGrid className="w-4 h-4" />
-                    <span>Total Halaman: {totalPages}</span>
+                    <span>Total Pages: {totalPages}</span>
                   </div>
                   <button 
                     onClick={(e) => { e.preventDefault(); setFile(null); setTotalPages(0); }}
                     className="mt-4 text-sm font-bold text-red-500 hover:underline"
                   >
-                    Ganti File
+                    Change File
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <div className="bg-gray-100 p-4 rounded-full mb-4">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6 transition-all group-hover:scale-105 duration-300">
+                  <div className="bg-gray-100 p-4 rounded-full mb-4 shadow-inner">
                     <FileUp className="w-10 h-10 text-gray-400" />
                   </div>
-                  <p className="mb-2 text-lg font-bold text-gray-700">Klik atau seret file PDF di sini</p>
-                  <p className="text-sm text-gray-500 font-medium">Privasi terjamin dengan pemrosesan lokal</p>
+                  <p className="mb-2 text-lg font-bold text-gray-700 tracking-tight">Click or drag PDF file here</p>
+                  <p className="text-sm text-gray-500 font-medium italic">Privacy guaranteed with local processing</p>
                 </div>
               )}
               <input type="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
@@ -148,33 +148,33 @@ export default function SplitPdfPage() {
           {/* Range Selection */}
           {file && (
             <div className="mb-10 bg-white p-8 rounded-2xl shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4">
-              <h3 className="text-lg font-bold text-gray-900 mb-6">Tentukan Rentang Halaman</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-6 tracking-tight">Define Page Range</h3>
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Halaman Mulai</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">Start Page</label>
                   <input
                     type="number"
                     min={1}
                     max={totalPages}
                     value={startPage}
                     onChange={(e) => setStartPage(parseInt(e.target.value) || 0)}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all font-bold"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Halaman Selesai</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">End Page</label>
                   <input
                     type="number"
                     min={1}
                     max={totalPages}
                     value={endPage}
                     onChange={(e) => setEndPage(parseInt(e.target.value) || 0)}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all font-bold"
                   />
                 </div>
               </div>
-              <p className="mt-4 text-sm text-gray-500 italic text-center">
-                Mengekstrak halaman {startPage} sampai {endPage} dari total {totalPages} halaman.
+              <p className="mt-6 text-sm text-gray-500 font-bold text-center italic">
+                Extracting pages {startPage} to {endPage} from a total of {totalPages} pages.
               </p>
             </div>
           )}
@@ -194,19 +194,18 @@ export default function SplitPdfPage() {
               {isSplitting ? (
                 <>
                   <Loader2 className="w-6 h-6 animate-spin" />
-                  Memisahkan...
+                  Splitting...
                 </>
               ) : (
                 <>
                   <FileDown className="w-6 h-6" />
-                  Pisahkan PDF
+                  Split PDF
                 </>
               )}
             </button>
           </div>
         </div>
       </main>
-
     </div>
   );
 }

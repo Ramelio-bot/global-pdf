@@ -23,7 +23,7 @@ export default function CompressPdfPage() {
       setFile(selectedFile);
       setResultInfo(null);
     } else if (selectedFile) {
-      alert("Hanya file PDF yang diperbolehkan.");
+      alert("Only PDF files are allowed.");
     }
   };
 
@@ -59,7 +59,7 @@ export default function CompressPdfPage() {
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error compressing PDF:", error);
-      alert("Terjadi kesalahan saat mengompresi PDF.");
+      alert("An error occurred while compressing the PDF.");
     } finally {
       setIsCompressing(false);
     }
@@ -71,7 +71,7 @@ export default function CompressPdfPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Kembali ke Beranda</span>
+            <span className="font-semibold">Back to Home</span>
           </Link>
           <div className="font-black text-xl tracking-tight text-gray-900">
             Compress PDF
@@ -83,8 +83,8 @@ export default function CompressPdfPage() {
       <main className="flex-grow flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl w-full">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-4">Kompresi PDF</h1>
-            <p className="text-gray-600">Perkecil ukuran file PDF Anda tanpa mengurangi kualitas dokumen secara drastis.</p>
+            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Compress PDF File</h1>
+            <p className="text-gray-600">Reduce your PDF file size without drastically compromising document quality.</p>
           </div>
 
           {/* Upload Box */}
@@ -98,26 +98,26 @@ export default function CompressPdfPage() {
               onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFileChange(e); }}
             >
               {file ? (
-                <div className="flex flex-col items-center p-4 text-center">
-                  <div className="bg-red-100 p-4 rounded-full mb-4">
+                <div className="flex flex-col items-center p-4 text-center animate-in zoom-in-95 transition-all">
+                  <div className="bg-red-100 p-4 rounded-full mb-4 shadow-inner">
                     <FileText className="w-10 h-10 text-red-600" />
                   </div>
-                  <p className="text-lg font-bold text-gray-900 mb-1 truncate max-w-xs">{file.name}</p>
-                  <p className="text-sm font-medium text-gray-500">Ukuran Asli: {(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  <p className="text-lg font-bold text-gray-900 mb-1 truncate max-w-xs font-bold tracking-tight">{file.name}</p>
+                  <p className="text-sm font-bold text-gray-500 italic">Original Size: {(file.size / 1024 / 1024).toFixed(2)} MB</p>
                   <button 
                     onClick={(e) => { e.preventDefault(); setFile(null); setResultInfo(null); }}
                     className="mt-4 text-sm font-bold text-red-500 hover:underline"
                   >
-                    Ganti File
+                    Change File
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <div className="bg-gray-100 p-4 rounded-full mb-4 group-hover:bg-red-50 transition-colors">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6 transition-all group-hover:scale-105 duration-300">
+                  <div className="bg-gray-100 p-4 rounded-full mb-4 group-hover:bg-red-50 transition-colors shadow-inner">
                     <FileUp className="w-10 h-10 text-gray-400 group-hover:text-red-500" />
                   </div>
-                  <p className="mb-2 text-lg font-bold text-gray-700">Klik atau seret file PDF di sini</p>
-                  <p className="text-sm text-gray-500 font-medium">Pemrosesan 100% lokal & aman</p>
+                  <p className="mb-2 text-lg font-bold text-gray-700 tracking-tight">Click or drag PDF file here</p>
+                  <p className="text-sm text-gray-500 font-medium italic">100% local & secure processing</p>
                 </div>
               )}
               <input type="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
@@ -127,14 +127,14 @@ export default function CompressPdfPage() {
           {/* Result Info */}
           {resultInfo && (
             <div className="mb-8 bg-green-50 border border-green-100 p-6 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4">
-              <div className="bg-green-500 text-white p-2 rounded-full">
+              <div className="bg-green-500 text-white p-2 rounded-full shadow-lg">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-bold text-green-900">Berhasil Dikompresi!</h3>
-                <p className="text-sm text-green-700 font-medium">
-                  Ukuran berkurang dari {(resultInfo.originalSize / 1024 / 1024).toFixed(2)} MB menjadi {(resultInfo.compressedSize / 1024 / 1024).toFixed(2)} MB 
-                  ({(((resultInfo.originalSize - resultInfo.compressedSize) / resultInfo.originalSize) * 100).toFixed(1)}% lebih kecil).
+                <h3 className="font-bold text-green-900 tracking-tight">Successfully Compressed!</h3>
+                <p className="text-sm text-green-700 font-bold">
+                  Size reduced from {(resultInfo.originalSize / 1024 / 1024).toFixed(2)} MB to {(resultInfo.compressedSize / 1024 / 1024).toFixed(2)} MB 
+                  ({(((resultInfo.originalSize - resultInfo.compressedSize) / resultInfo.originalSize) * 100).toFixed(1)}% smaller).
                 </p>
               </div>
             </div>
@@ -155,19 +155,18 @@ export default function CompressPdfPage() {
               {isCompressing ? (
                 <>
                   <Loader2 className="w-6 h-6 animate-spin" />
-                  Mengompresi...
+                  Compressing...
                 </>
               ) : (
                 <>
                   <Minimize2 className="w-6 h-6" />
-                  Kompres PDF
+                  Compress PDF
                 </>
               )}
             </button>
           </div>
         </div>
       </main>
-
     </div>
   );
 }

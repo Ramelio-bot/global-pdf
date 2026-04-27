@@ -26,10 +26,8 @@ export default function GrayscalePdfPage() {
       const pdfDoc = await PDFDocument.load(arrayBuffer);
       const pages = pdfDoc.getPages();
 
-      // pdf-lib tidak memiliki filter grayscale langsung untuk konten yang sudah ada.
-      // Kita mensimulasikannya dengan menggambar rectangle abu-abu transparan dengan blend mode 'Color' 
-      // (Catatan: pdf-lib saat ini belum mendukung blend modes secara luas tanpa modifikasi low-level).
-      // Untuk solusi client-side yang stabil, kita akan menggunakan teknik overlay abu-abu ringan.
+      // pdf-lib does not have direct grayscale filters for existing content.
+      // We simulate it by drawing a transparent gray rectangle with a light overlay.
       pages.forEach((page) => {
         const { width, height } = page.getSize();
         page.drawRectangle({
@@ -38,7 +36,7 @@ export default function GrayscalePdfPage() {
           width,
           height,
           color: rgb(0.5, 0.5, 0.5),
-          opacity: 0.15, // Overlay tipis untuk memberikan efek 'Muted' / Grayscale visual
+          opacity: 0.15, // Light overlay for visual 'Muted' / Grayscale effect
         });
       });
 
@@ -56,7 +54,7 @@ export default function GrayscalePdfPage() {
       setIsDone(true);
     } catch (error) {
       console.error("Error grayscaling PDF:", error);
-      alert("Terjadi kesalahan saat memproses grayscale.");
+      alert("An error occurred while processing the grayscale PDF.");
     } finally {
       setIsProcessing(false);
     }
@@ -68,7 +66,7 @@ export default function GrayscalePdfPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Kembali ke Beranda</span>
+            <span className="font-semibold">Back to Home</span>
           </Link>
           <div className="font-black text-xl tracking-tight text-gray-900">PDF to Grayscale</div>
           <div className="w-24"></div>
@@ -78,20 +76,20 @@ export default function GrayscalePdfPage() {
       <main className="flex-grow flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl w-full">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-4">Ubah PDF ke Grayscale</h1>
-            <p className="text-gray-600">Simulasikan profil warna abu-abu (grayscale) pada dokumen PDF Anda untuk penghematan tinta cetak.</p>
+            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Convert PDF to Grayscale</h1>
+            <p className="text-gray-600">Simulate a grayscale color profile on your PDF documents to save on printing ink.</p>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8 text-center">
-            <div className="mb-8">
-              <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">
-                Pilih File PDF
+          <div className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 mb-8 text-center animate-in fade-in slide-in-from-bottom-4">
+            <div className="mb-10">
+              <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-widest">
+                Select PDF File
               </label>
               <input
                 type="file"
                 accept=".pdf"
                 onChange={handleFileChange}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-black file:bg-red-50 file:text-red-600 hover:file:bg-red-100 transition-all cursor-pointer"
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-4 file:px-8 file:rounded-full file:border-0 file:text-sm file:font-black file:bg-red-50 file:text-red-600 hover:file:bg-red-100 transition-all cursor-pointer shadow-sm"
               />
             </div>
 
@@ -100,23 +98,23 @@ export default function GrayscalePdfPage() {
                 <button
                   onClick={processGrayscale}
                   disabled={isProcessing}
-                  className="bg-red-600 text-white px-12 py-4 rounded-full font-black text-lg shadow-lg hover:bg-red-700 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 shadow-red-200 mx-auto"
+                  className="bg-red-600 text-white px-14 py-5 rounded-full font-black text-lg shadow-xl hover:bg-red-700 hover:scale-105 active:scale-95 transition-all flex items-center gap-4 shadow-red-200 mx-auto"
                 >
-                  {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : <Palette className="w-6 h-6" />}
-                  Konversi ke Grayscale
+                  {isProcessing ? <Loader2 className="w-7 h-7 animate-spin" /> : <Palette className="w-7 h-7" />}
+                  Convert to Grayscale
                 </button>
               </div>
             )}
           </div>
 
           {isDone && (
-            <div className="bg-green-50 border border-green-100 p-6 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4">
-              <div className="bg-green-500 text-white p-2 rounded-full">
-                <CheckCircle2 className="w-6 h-6" />
+            <div className="bg-green-50 border border-green-100 p-8 rounded-2xl flex items-center gap-5 animate-in fade-in slide-in-from-bottom-4 shadow-sm">
+              <div className="bg-green-500 text-white p-3 rounded-full shadow-lg">
+                <CheckCircle2 className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="font-bold text-green-900">Konversi Berhasil!</h3>
-                <p className="text-sm text-green-700 font-medium">PDF grayscale Anda telah diunduh secara otomatis.</p>
+                <h3 className="font-bold text-green-900 tracking-tight text-lg">Success!</h3>
+                <p className="text-sm text-green-700 font-bold">Your grayscale PDF has been successfully processed and downloaded.</p>
               </div>
             </div>
           )}

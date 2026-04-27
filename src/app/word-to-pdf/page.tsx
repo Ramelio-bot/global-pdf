@@ -24,7 +24,7 @@ export default function WordToPdfPage() {
       setHasPreview(false);
       if (previewRef.current) previewRef.current.innerHTML = "";
     } else if (selectedFile) {
-      alert("Hanya file Word (.docx) yang diperbolehkan.");
+      alert("Only Word files (.docx) are allowed.");
     }
   };
 
@@ -47,7 +47,7 @@ export default function WordToPdfPage() {
       setHasPreview(true);
     } catch (error) {
       console.error("Error rendering Word preview:", error);
-      alert("Gagal memuat pratinjau dokumen.");
+      alert("Failed to load document preview.");
     } finally {
       setIsRendering(false);
     }
@@ -59,7 +59,7 @@ export default function WordToPdfPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F5FA] flex flex-col font-sans text-gray-800">
-      {/* CSS Khusus untuk Print Native */}
+      {/* Native Print Specific CSS */}
       <style jsx global>{`
         @media print {
           body * {
@@ -95,10 +95,10 @@ export default function WordToPdfPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Kembali ke Beranda</span>
+            <span className="font-semibold">Back to Home</span>
           </Link>
           <div className="font-black text-xl tracking-tight text-gray-900">
-            Word to PDF (Native)
+            Word to PDF
           </div>
           <div className="w-24"></div>
         </div>
@@ -109,23 +109,23 @@ export default function WordToPdfPage() {
           {/* Section Upload & Control - Hidden on Print */}
           <div className="print:hidden">
             <div className="text-center mb-10">
-              <h1 className="text-3xl font-black text-gray-900 mb-4">Ubah Word ke PDF</h1>
-              <p className="text-gray-600">Gunakan mesin cetak asli browser untuk hasil konversi paling akurat dan profesional.</p>
+              <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Convert Word to PDF</h1>
+              <p className="text-gray-600">Utilize the browser's native print engine for the most accurate and professional conversion results.</p>
             </div>
 
             <div className="max-w-2xl mx-auto mb-10">
               <div className="relative group mb-8">
                 <label 
                   className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-2xl transition-all cursor-pointer shadow-sm
-                    ${isDragging ? "bg-red-50 border-red-500" : "bg-white border-gray-300 hover:bg-gray-50 hover:border-red-400"}
+                    ${isDragging ? "bg-red-50 border-red-500" : "bg-white border-gray-300 hover:bg-gray-50 hover:border-red-400 shadow-inner"}
                   `}
                   onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                   onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
                   onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFileChange(e); }}
                 >
                   {file ? (
-                    <div className="flex flex-col items-center p-4 text-center">
-                      <div className="bg-blue-100 p-3 rounded-full mb-3">
+                    <div className="flex flex-col items-center p-4 text-center animate-in zoom-in-95">
+                      <div className="bg-blue-100 p-3 rounded-full mb-3 shadow-inner">
                         <FileText className="w-8 h-8 text-blue-600" />
                       </div>
                       <p className="text-lg font-bold text-gray-900 mb-1 truncate max-w-xs">{file.name}</p>
@@ -133,14 +133,14 @@ export default function WordToPdfPage() {
                         onClick={(e) => { e.preventDefault(); setFile(null); setHasPreview(false); }}
                         className="mt-2 text-sm font-bold text-red-500 hover:underline"
                       >
-                        Ganti File
+                        Change File
                       </button>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6 group-hover:scale-105 transition-all duration-300">
                       <FileUp className="w-10 h-10 text-gray-400 mb-3" />
-                      <p className="mb-1 text-lg font-bold text-gray-700">Klik atau seret file Word di sini</p>
-                      <p className="text-sm text-gray-500 font-medium">Proses konversi melalui Native Print</p>
+                      <p className="mb-1 text-lg font-bold text-gray-700 tracking-tight">Click or drag Word file here</p>
+                      <p className="text-sm text-gray-500 font-medium italic">Conversion via Native Print</p>
                     </div>
                   )}
                   <input type="file" className="hidden" accept=".docx" onChange={handleFileChange} />
@@ -160,7 +160,7 @@ export default function WordToPdfPage() {
                     `}
                   >
                     {isRendering ? <Loader2 className="w-6 h-6 animate-spin" /> : <Eye className="w-6 h-6" />}
-                    Tampilkan Pratinjau
+                    Preview Document
                   </button>
                 ) : (
                   <button
@@ -168,26 +168,26 @@ export default function WordToPdfPage() {
                     className="px-12 py-4 rounded-full bg-red-600 text-white font-black text-lg shadow-lg hover:bg-red-700 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 shadow-red-200"
                   >
                     <Printer className="w-6 h-6" />
-                    Simpan sebagai PDF
+                    Save as PDF
                   </button>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Area Pratinjau Dokumen */}
+          {/* Document Preview Area */}
           <div className={`w-full flex flex-col items-center ${!hasPreview ? 'hidden print:hidden' : ''}`}>
-            <div className="w-full text-center mb-6 print:hidden">
-              <h2 className="text-xl font-bold text-gray-900 flex items-center justify-center gap-2">
+            <div className="w-full text-center mb-6 print:hidden animate-in fade-in slide-in-from-top-4">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center justify-center gap-2 tracking-tight">
                 <CheckCircle2 className="text-green-500" />
-                Pratinjau Dokumen Siap
+                Document Preview Ready
               </h2>
-              <p className="text-sm text-gray-500 font-medium mt-1 italic">
-                Tips: Di jendela Print, pilih "Save as PDF" sebagai Destination.
+              <p className="text-sm text-gray-500 font-bold mt-1 italic">
+                Tip: In the Print window, select "Save as PDF" as the Destination.
               </p>
             </div>
             
-            <div className="bg-white shadow-2xl rounded-sm border border-gray-200 p-0 overflow-auto max-w-full print:border-none print:shadow-none" id="print-area">
+            <div className="bg-white shadow-2xl rounded-sm border border-gray-200 p-0 overflow-auto max-w-full print:border-none print:shadow-none animate-in zoom-in-95 duration-500" id="print-area">
               <div ref={previewRef} className="docx-wrapper"></div>
             </div>
           </div>

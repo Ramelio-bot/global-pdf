@@ -51,7 +51,7 @@ export default function RemovePagesPage() {
       const sortedIndices = Array.from(removeIndices).sort((a, b) => b - a);
       
       if (sortedIndices.length >= totalPages) {
-        alert("Anda tidak bisa menghapus semua halaman.");
+        alert("You cannot remove all pages from the document.");
         setIsProcessing(false);
         return;
       }
@@ -74,7 +74,7 @@ export default function RemovePagesPage() {
       setIsDone(true);
     } catch (error) {
       console.error("Error removing pages:", error);
-      alert("Terjadi kesalahan saat menghapus halaman. Pastikan format nomor halaman benar.");
+      alert("An error occurred while removing pages. Please ensure the page number format is correct.");
     } finally {
       setIsProcessing(false);
     }
@@ -86,7 +86,7 @@ export default function RemovePagesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Kembali ke Beranda</span>
+            <span className="font-semibold">Back to Home</span>
           </Link>
           <div className="font-black text-xl tracking-tight text-gray-900">Remove Pages</div>
           <div className="w-24"></div>
@@ -96,37 +96,37 @@ export default function RemovePagesPage() {
       <main className="flex-grow flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl w-full">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-4">Hapus Halaman PDF</h1>
-            <p className="text-gray-600">Pilih dan hapus halaman yang tidak diinginkan dari dokumen PDF Anda.</p>
+            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Remove PDF Pages</h1>
+            <p className="text-gray-600">Select and delete unwanted pages from your PDF document easily.</p>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8">
-            <div className="mb-8">
-              <label className="block text-sm font-bold text-gray-700 mb-4 text-center uppercase tracking-wider">
-                1. Pilih File PDF
+          <div className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 mb-8 animate-in fade-in slide-in-from-bottom-4">
+            <div className="mb-10">
+              <label className="block text-sm font-bold text-gray-700 mb-4 text-center uppercase tracking-widest">
+                1. Select PDF File
               </label>
               <input
                 type="file"
                 accept=".pdf"
                 onChange={handleFileChange}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-black file:bg-red-50 file:text-red-600 hover:file:bg-red-100 transition-all cursor-pointer"
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-4 file:px-8 file:rounded-full file:border-0 file:text-sm file:font-black file:bg-red-50 file:text-red-600 hover:file:bg-red-100 transition-all cursor-pointer shadow-sm"
               />
             </div>
 
             {file && (
               <div className="animate-in fade-in slide-in-from-bottom-4">
-                <div className="mb-8">
-                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">
-                    2. Masukkan Nomor Halaman yang Dihapus
+                <div className="mb-10">
+                  <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-widest">
+                    2. Enter Page Numbers to Remove
                   </label>
                   <input
                     type="text"
                     value={pagesToRemove}
                     onChange={(e) => setPagesToRemove(e.target.value)}
-                    placeholder="Contoh: 1, 3, 5-7"
-                    className="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-all font-bold text-lg"
+                    placeholder="Example: 1, 3, 5-7"
+                    className="w-full px-8 py-5 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-all font-bold text-lg shadow-inner"
                   />
-                  <p className="mt-2 text-xs text-gray-500 font-medium italic">Gunakan koma untuk angka terpisah dan tanda hubung untuk rentang halaman.</p>
+                  <p className="mt-4 text-xs text-gray-500 font-bold italic">Use commas for separate pages and hyphens for page ranges.</p>
                 </div>
 
                 <div className="flex justify-center">
@@ -134,12 +134,12 @@ export default function RemovePagesPage() {
                     onClick={processRemove}
                     disabled={isProcessing || !pagesToRemove}
                     className={`
-                      px-12 py-4 rounded-full font-black text-lg shadow-lg transition-all flex items-center gap-3
+                      px-14 py-5 rounded-full font-black text-lg shadow-xl transition-all flex items-center gap-4
                       ${!isProcessing && pagesToRemove ? "bg-red-600 text-white hover:bg-red-700 hover:scale-105 active:scale-95 shadow-red-200" : "bg-gray-200 text-gray-400 cursor-not-allowed"}
                     `}
                   >
-                    {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : <Trash2 className="w-6 h-6" />}
-                    Hapus Halaman & Unduh
+                    {isProcessing ? <Loader2 className="w-7 h-7 animate-spin" /> : <Trash2 className="w-7 h-7" />}
+                    Remove Pages & Download
                   </button>
                 </div>
               </div>
@@ -147,13 +147,13 @@ export default function RemovePagesPage() {
           </div>
 
           {isDone && (
-            <div className="bg-green-50 border border-green-100 p-6 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4">
-              <div className="bg-green-500 text-white p-2 rounded-full">
-                <CheckCircle2 className="w-6 h-6" />
+            <div className="bg-green-50 border border-green-100 p-8 rounded-2xl flex items-center gap-5 animate-in fade-in slide-in-from-bottom-4 shadow-sm">
+              <div className="bg-green-500 text-white p-3 rounded-full shadow-lg">
+                <CheckCircle2 className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="font-bold text-green-900">Berhasil!</h3>
-                <p className="text-sm text-green-700 font-medium">Halaman telah dihapus dan PDF baru telah diunduh.</p>
+                <h3 className="font-bold text-green-900 tracking-tight text-lg">Success!</h3>
+                <p className="text-sm text-green-700 font-bold">Pages have been removed and your new PDF has been downloaded.</p>
               </div>
             </div>
           )}

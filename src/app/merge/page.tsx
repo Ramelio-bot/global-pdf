@@ -48,7 +48,7 @@ export default function MergePage() {
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error merging PDFs:", error);
-      alert("Terjadi kesalahan saat menggabungkan PDF.");
+      alert("An error occurred while merging PDFs.");
     } finally {
       setIsMerging(false);
     }
@@ -60,20 +60,20 @@ export default function MergePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Kembali ke Beranda</span>
+            <span className="font-semibold">Back to Home</span>
           </Link>
           <div className="font-black text-xl tracking-tight text-gray-900">
             Merge PDF
           </div>
-          <div className="w-24"></div> {/* Spacer */}
+          <div className="w-24"></div>
         </div>
       </header>
 
       <main className="flex-grow flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl w-full">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-4">Gabungkan PDF</h1>
-            <p className="text-gray-600">Pilih beberapa file PDF dan gabungkan menjadi satu dokumen dalam hitungan detik.</p>
+            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Merge PDF Files</h1>
+            <p className="text-gray-600">Select multiple PDF files and merge them into a single document in seconds.</p>
           </div>
 
           {/* Upload Box */}
@@ -102,11 +102,11 @@ export default function MergePage() {
               }}
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <div className="bg-red-50 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
+                <div className="bg-red-50 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform shadow-inner">
                   <FileUp className="w-10 h-10 text-red-600" />
                 </div>
-                <p className="mb-2 text-lg font-bold text-gray-700">Klik untuk unggah atau seret file di sini</p>
-                <p className="text-sm text-gray-500 font-medium">Hanya file PDF yang diperbolehkan</p>
+                <p className="mb-2 text-lg font-bold text-gray-700 tracking-tight">Click to upload or drag files here</p>
+                <p className="text-sm text-gray-500 font-medium italic">Only PDF files are allowed</p>
               </div>
               <input
                 type="file"
@@ -120,14 +120,14 @@ export default function MergePage() {
 
           {/* File List */}
           {files.length > 0 && (
-            <div className="mt-8 space-y-3">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">File yang dipilih ({files.length})</h2>
+            <div className="mt-8 space-y-3 animate-in fade-in slide-in-from-bottom-4">
+              <h2 className="text-lg font-bold text-gray-900 mb-4 tracking-tight">Selected Files ({files.length})</h2>
               {files.map((file, index) => (
-                <div key={index} className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100 group">
+                <div key={index} className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100 group hover:border-red-100 transition-all">
                   <div className="flex items-center gap-3 overflow-hidden">
                     <FileText className="w-6 h-6 text-red-500 flex-shrink-0" />
                     <span className="text-sm font-semibold text-gray-700 truncate">{file.name}</span>
-                    <span className="text-xs text-gray-400">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                    <span className="text-xs text-gray-400 font-bold">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
                   </div>
                   <button
                     onClick={() => removeFile(index)}
@@ -155,22 +155,21 @@ export default function MergePage() {
               {isMerging ? (
                 <>
                   <Loader2 className="w-6 h-6 animate-spin" />
-                  Memproses...
+                  Processing...
                 </>
               ) : (
-                "Gabungkan PDF"
+                "Merge PDF"
               )}
             </button>
           </div>
           
           {files.length === 1 && (
-            <p className="text-center mt-4 text-sm font-medium text-amber-600">
-              Pilih setidaknya satu file lagi untuk menggabungkan.
+            <p className="text-center mt-4 text-sm font-bold text-amber-600 animate-pulse">
+              Select at least one more file to merge.
             </p>
           )}
         </div>
       </main>
-
     </div>
   );
 }

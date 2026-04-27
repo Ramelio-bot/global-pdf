@@ -33,7 +33,7 @@ export default function OcrPdfPage() {
       
       let fullText = "";
       
-      // Kita proses halaman pertama sebagai demo OCR (proses seluruh halaman PDF bisa sangat berat di client)
+      // We process the first page as an OCR demo (processing all pages can be heavy client-side)
       const page = await pdf.getPage(1);
       const viewport = page.getViewport({ scale: 2 });
       const canvas = document.createElement("canvas");
@@ -58,7 +58,7 @@ export default function OcrPdfPage() {
       setOcrResult(fullText);
     } catch (error) {
       console.error("OCR Error:", error);
-      alert("Terjadi kesalahan saat memproses OCR. Pastikan file adalah dokumen PDF.");
+      alert("An error occurred while processing OCR. Please ensure the file is a valid PDF document.");
     } finally {
       setIsProcessing(false);
     }
@@ -78,12 +78,12 @@ export default function OcrPdfPage() {
     <div className="min-h-screen bg-[#F5F5FA] flex flex-col font-sans text-gray-800">
       <header className="w-full bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
+          <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors font-bold">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Kembali</span>
+            <span>Back to Home</span>
           </Link>
           <div className="font-black text-xl tracking-tight text-gray-900 flex items-center gap-2">
-            <Search className="text-red-600" /> OCR PDF
+            <Search className="text-red-600 w-6 h-6" /> OCR PDF
           </div>
           <div className="w-24"></div>
         </div>
@@ -92,42 +92,56 @@ export default function OcrPdfPage() {
       <main className="flex-grow flex flex-col items-center py-12 px-4">
         <div className="max-w-3xl w-full">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-4">Ekstrak Teks dari PDF (OCR)</h1>
-            <p className="text-gray-600">Gunakan kecerdasan buatan untuk membaca teks dari PDF hasil scan secara lokal.</p>
+            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Extract Text from PDF (OCR)</h1>
+            <p className="text-gray-600">Use advanced AI to read and extract text from scanned PDF documents locally in your browser.</p>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8">
-            <div className="mb-8 text-center">
-              <input type="file" accept=".pdf" onChange={handleFileChange} className="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-black file:bg-red-50 file:text-red-600 hover:file:bg-red-100 transition-all cursor-pointer" />
+          <div className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 mb-8 animate-in fade-in slide-in-from-bottom-4 shadow-sm">
+            <div className="mb-10 text-center">
+              <label className="block text-sm font-bold text-gray-700 mb-6 uppercase tracking-widest">
+                Select PDF File
+              </label>
+              <input type="file" accept=".pdf" onChange={handleFileChange} className="block w-full text-sm text-gray-500 file:mr-4 file:py-4 file:px-8 file:rounded-full file:border-0 file:text-sm file:font-black file:bg-red-50 file:text-red-600 hover:file:bg-red-100 transition-all cursor-pointer shadow-sm" />
             </div>
 
             {file && !ocrResult && (
-              <div className="flex flex-col items-center gap-4">
-                <button onClick={processOcr} disabled={isProcessing} className="bg-red-600 text-white px-12 py-4 rounded-full font-black text-lg shadow-lg hover:bg-red-700 transition-all flex items-center gap-3">
-                  {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : <Languages className="w-6 h-6" />}
-                  Mulai OCR (Halaman 1)
+              <div className="flex flex-col items-center gap-6">
+                <button onClick={processOcr} disabled={isProcessing} className="bg-red-600 text-white px-14 py-5 rounded-full font-black text-lg shadow-xl hover:bg-red-700 hover:scale-105 active:scale-95 transition-all flex items-center gap-4 shadow-red-200">
+                  {isProcessing ? <Loader2 className="w-7 h-7 animate-spin" /> : <Languages className="w-7 h-7" />}
+                  Start OCR (Page 1)
                 </button>
                 {isProcessing && (
-                  <div className="w-full max-w-xs bg-gray-200 rounded-full h-2.5 mt-4">
-                    <div className="bg-red-600 h-2.5 rounded-full transition-all duration-300" style={{ width: `${progress}%` }}></div>
-                    <p className="text-center text-xs font-bold mt-2 text-gray-500">Memproses: {progress}%</p>
+                  <div className="w-full max-w-sm">
+                    <div className="w-full bg-gray-100 rounded-full h-3 mb-3 shadow-inner">
+                      <div className="bg-red-600 h-3 rounded-full transition-all duration-500 ease-out shadow-lg" style={{ width: `${progress}%` }}></div>
+                    </div>
+                    <p className="text-center text-sm font-black text-gray-500">Processing: {progress}%</p>
                   </div>
                 )}
               </div>
             )}
 
             {ocrResult && (
-              <div className="animate-in fade-in">
-                <label className="block text-sm font-bold text-gray-700 mb-2 uppercase">Hasil OCR:</label>
-                <textarea readOnly value={ocrResult} className="w-full h-64 p-6 rounded-2xl bg-gray-50 border border-gray-100 font-mono text-sm focus:outline-none mb-4" />
+              <div className="animate-in fade-in duration-500">
+                <div className="flex items-center justify-between mb-4">
+                  <label className="block text-sm font-black text-gray-700 uppercase tracking-widest">OCR Results:</label>
+                  <div className="flex items-center gap-2 text-green-600 text-xs font-bold">
+                    <CheckCircle2 className="w-4 h-4" /> Extraction Complete
+                  </div>
+                </div>
+                <textarea readOnly value={ocrResult} className="w-full h-80 p-8 rounded-3xl bg-gray-50 border border-gray-100 font-mono text-sm focus:outline-none mb-8 shadow-inner resize-none scrollbar-thin" />
                 <div className="flex justify-center">
-                  <button onClick={downloadTxt} className="bg-gray-900 text-white px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-black transition-all">
-                    <Download className="w-5 h-5" /> Unduh .txt
+                  <button onClick={downloadTxt} className="bg-gray-900 text-white px-10 py-4 rounded-full font-black flex items-center gap-3 hover:bg-black hover:scale-105 active:scale-95 transition-all shadow-lg">
+                    <Download className="w-6 h-6" /> Download .txt
                   </button>
                 </div>
               </div>
             )}
           </div>
+          
+          <p className="text-center text-xs text-gray-400 font-bold italic mt-4 px-10 leading-relaxed">
+            Note: For performance and privacy, we currently process the first page of your document. All AI computations are done 100% locally on your machine.
+          </p>
         </div>
       </main>
     </div>
