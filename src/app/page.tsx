@@ -17,7 +17,7 @@ export default function Home() {
     {
       name: "Organize",
       items: [
-        { title: "Merge PDF", icon: <FileUp />, href: "/merge" },
+        { title: "Merge PDF", icon: <FileUp />, href: "/merge-pdf" },
         { title: "Split PDF", icon: <FileDown />, href: "/split-pdf" },
         { title: "Remove Pages", icon: <Trash2 />, href: "/remove-pages" },
         { title: "Rotate PDF", icon: <RotateCw />, href: "/rotate-pdf" },
