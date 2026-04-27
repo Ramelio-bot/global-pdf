@@ -25,7 +25,7 @@ export default function Home() {
       title: "Image to PDF",
       description: "Convert JPG, PNG, or TIFF images into PDF documents easily.",
       icon: <ImageIcon className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
-      href: "#",
+      href: "/image-to-pdf",
     },
     {
       title: "PDF Security",
