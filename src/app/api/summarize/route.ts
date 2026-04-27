@@ -12,24 +12,45 @@ export async function POST(req: Request) {
       );
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "GEMINI_API_KEY is not configured in the system." },
+        { status: 500 }
+      );
+    }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // 1. Primary Analysis Prompt (Strictly following user requirements)
-    const primaryPrompt = `Analyze this document in depth. Identify the organizational hierarchy (e.g., Alpha-01, Underboss), financial rules (e.g., 70/20/10 system), and security protocols (e.g., The Vault, Burn Protocol). 
-    
-    Structure the response with clear Markdown headings. Use a professional and analytical tone.
-    
-    DOCUMENT TEXT:
-    ${text.substring(0, 30000)}`;
+    // Precise System Prompt for High-Stakes Analysis
+    const primaryPrompt = `
+      Analyze this document in depth as a Senior Strategic Analyst.
+      
+      SPECIFIC REQUIREMENTS:
+      1. Organizational Hierarchy: Identify and detail roles such as Alpha-01, Underboss, and other specific command structures mentioned.
+      2. Financial Rules: Detail the "70/20/10 system" and any specific monetary requirements or deposit protocols.
+      3. Security & Operational Protocols: Detail "The Vault", "Burn Protocol", and "Admin Logistik" procedures.
+      4. Target Regions & Agendas: Identify strategic focus areas, specifically looking for references to "Solo", "Jogja", or key expansion markers for 2026.
+
+      Output Format: Use clean Markdown with sharp headings. Be professional, direct, and exhaustive. 
+      Do NOT use generic or placeholder text. If information is missing, explicitly state "Data not found in source text".
+
+      DOCUMENT TEXT:
+      ${text.substring(0, 35000)} 
+    `;
 
     const primaryResult = await model.generateContent(primaryPrompt);
     const summaryText = primaryResult.response.text();
 
-    // 2. High-Impact Strategic Highlights (Derived from the AI summary, no mocks)
-    const highlightPrompt = `Based on the following analysis, provide exactly 3 short, high-impact strategic highlights (1 sentence each). Focus only on critical findings related to hierarchy, finance, or security. Do not use generic text.
-    
-    ANALYSIS: ${summaryText.substring(0, 5000)}`;
+    // Generate 3 High-Impact Highlights directly from the analysis
+    const highlightPrompt = `
+      Based on the following analysis, provide exactly 3 short, high-impact strategic highlights (1 sentence each). 
+      Focus ONLY on Hierarchy, Finance, or Security. 
+      Use active, intelligence-grade language.
+      
+      ANALYSIS: ${summaryText.substring(0, 5000)}
+    `;
     
     const highlightResult = await model.generateContent(highlightPrompt);
     const highlightResponse = highlightResult.response.text();
@@ -46,9 +67,9 @@ export async function POST(req: Request) {
     });
     
   } catch (error: any) {
-    console.error("Gemini Live Integration Error:", error);
+    console.error("Gemini Critical Error:", error);
     return NextResponse.json(
-      { error: "AI Processing failed. Ensure your GEMINI_API_KEY is valid." },
+      { error: `Internal API Error: ${error.message || "Unknown Failure"}` },
       { status: 500 }
     );
   }

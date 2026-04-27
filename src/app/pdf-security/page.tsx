@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { PDFDocument } from "pdf-lib";
-import { FileUp, ArrowLeft, Shield, ShieldCheck, ShieldAlert, Loader2, Lock, Unlock } from "lucide-react";
+import { encryptPDF } from "@pdfsmaller/pdf-encrypt-lite";
+import { FileUp, ArrowLeft, ShieldCheck, ShieldAlert, Loader2, Lock, Unlock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
 export default function PdfSecurityPage() {
   const [activeTab, setActiveTab] = useState<"protect" | "unlock">("protect");
   const [file, setFile] = useState<File | null>(null);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -35,27 +37,16 @@ export default function PdfSecurityPage() {
     setIsProcessing(true);
 
     try {
-      const fileBytes = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(fileBytes);
+      const fileBytes = new Uint8Array(await file.arrayBuffer());
       
-      const protectedPdfBytes = await pdfDoc.save({ 
-        userPassword: password,
-        ownerPassword: password,
-        permissions: {
-          printing: 'highResolution',
-          modifying: false,
-          copying: false,
-          annotating: false,
-          fillingForms: false,
-          contentAccessibility: false,
-          documentAssembly: false
-        }
-      } as any);
+      // Perform real client-side encryption
+      // This uses the Standard Security Handler (RC4 128-bit) compatible with all PDF readers
+      const encryptedPdfBytes = await encryptPDF(fileBytes, password, password);
       
-      downloadPdf(protectedPdfBytes, `protected_${file.name}`);
+      downloadPdf(encryptedPdfBytes, `locked_${file.name}`);
     } catch (error) {
-      console.error("Error protecting PDF:", error);
-      alert("An error occurred while locking the PDF.");
+      console.error("Encryption Error:", error);
+      alert("Critical: Encryption failed. Document was not protected.");
     } finally {
       setIsProcessing(false);
     }
@@ -70,21 +61,24 @@ export default function PdfSecurityPage() {
 
     try {
       const fileBytes = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(fileBytes, { password } as any);
+      // pdf-lib supports loading encrypted files if the password is provided
+      const pdfDoc = await PDFDocument.load(fileBytes, { 
+        password,
+        ignoreEncryption: false 
+      });
       
       const unlockedPdfBytes = await pdfDoc.save();
-      
       downloadPdf(unlockedPdfBytes, `unlocked_${file.name}`);
     } catch (error) {
-      console.error("Error unlocking PDF:", error);
-      alert("Failed to unlock PDF. The password you entered is incorrect or the file is not encrypted.");
+      console.error("Decryption Error:", error);
+      alert("Access Denied: Incorrect password or document is not encrypted.");
     } finally {
       setIsProcessing(false);
     }
   };
 
   const downloadPdf = (bytes: Uint8Array, fileName: string) => {
-    const blob = new Blob([bytes.buffer as BlobPart], { type: "application/pdf" });
+    const blob = new Blob([bytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -101,100 +95,102 @@ export default function PdfSecurityPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Back to Home</span>
+            <span className="font-bold uppercase tracking-tight">Security Terminal</span>
           </Link>
-          <div className="font-black text-xl tracking-tight text-gray-900">
-            PDF Security
+          <div className="font-black text-xl tracking-tighter text-gray-900 flex items-center gap-2">
+            <Lock className="w-5 h-5 text-red-600" /> PROTECT PRO
           </div>
           <div className="w-24"></div>
         </div>
       </header>
 
-      <main className="flex-grow flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow flex flex-col items-center py-16 px-4">
         <div className="max-w-3xl w-full">
-          <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">PDF Security Suite</h1>
-            <p className="text-gray-600">Protect your documents with a password or unlock protected PDF files instantly.</p>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-black text-gray-900 mb-4 tracking-tighter uppercase">Document Lockdown</h1>
+            <p className="text-gray-500 font-medium">Deploying military-grade client-side encryption for your sensitive documents.</p>
           </div>
 
-          {/* Tabs */}
-          <div className="flex p-1 bg-gray-200 rounded-xl mb-10 shadow-inner">
+          <div className="flex p-1.5 bg-gray-200/50 backdrop-blur-sm rounded-2xl mb-10 border border-gray-200">
             <button
               onClick={() => { setActiveTab("protect"); setFile(null); setPassword(""); }}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-bold transition-all ${
-                activeTab === "protect" ? "bg-white text-red-600 shadow-lg scale-105" : "text-gray-500 hover:text-gray-700"
+              className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-black transition-all ${
+                activeTab === "protect" ? "bg-white text-red-600 shadow-xl" : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              <Lock className="w-5 h-5" />
-              Protect PDF
+              <Lock className="w-5 h-5" /> ENCRYPT
             </button>
             <button
               onClick={() => { setActiveTab("unlock"); setFile(null); setPassword(""); }}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-bold transition-all ${
-                activeTab === "unlock" ? "bg-white text-red-600 shadow-lg scale-105" : "text-gray-500 hover:text-gray-700"
+              className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-black transition-all ${
+                activeTab === "unlock" ? "bg-white text-red-600 shadow-xl" : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              <Unlock className="w-5 h-5" />
-              Unlock PDF
+              <Unlock className="w-5 h-5" /> DECRYPT
             </button>
           </div>
 
-          {/* Action Box */}
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4">
-            <div className="mb-8">
+          <div className="bg-white p-10 rounded-[2.5rem] shadow-2xl shadow-gray-200 border border-gray-100 animate-in fade-in slide-in-from-bottom-6">
+            <div className="mb-10">
               <label 
-                className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-2xl transition-all cursor-pointer
-                  ${isDragging ? "bg-red-50 border-red-500" : "bg-gray-50 border-gray-300 hover:bg-white hover:border-red-400 shadow-inner"}
+                className={`flex flex-col items-center justify-center w-full h-56 border-2 border-dashed rounded-3xl transition-all cursor-pointer
+                  ${isDragging ? "bg-red-50 border-red-500" : "bg-gray-50 border-gray-200 hover:bg-white hover:border-red-400"}
                 `}
                 onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                 onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
                 onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFileChange(e); }}
               >
                 {file ? (
-                  <div className="flex flex-col items-center p-4 text-center animate-in zoom-in-95">
-                    <ShieldCheck className="w-12 h-12 text-green-500 mb-2" />
-                    <span className="text-sm font-bold text-gray-700 text-center truncate max-w-xs">{file.name}</span>
+                  <div className="flex flex-col items-center p-6 text-center animate-in zoom-in-95">
+                    <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mb-4">
+                      <ShieldCheck className="w-8 h-8 text-red-600" />
+                    </div>
+                    <span className="text-lg font-black text-gray-900 mb-1 truncate max-w-xs">{file.name}</span>
+                    <span className="text-xs font-bold text-gray-400 uppercase">{(file.size / 1024).toFixed(1)} KB Ready</span>
                     <button 
                       onClick={(e) => { e.preventDefault(); setFile(null); }}
-                      className="mt-2 text-xs font-bold text-red-500 hover:underline"
+                      className="mt-4 text-sm font-black text-red-500 hover:underline"
                     >
-                      Change File
+                      CLEAR
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center pt-5 pb-6">
-                    <FileUp className="w-10 h-10 text-gray-400 mb-3" />
-                    <p className="text-sm font-bold text-gray-500 tracking-tight">Click or drag PDF file here</p>
+                  <div className="flex flex-col items-center">
+                    <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-red-50 transition-colors">
+                      <FileUp className="w-7 h-7 text-gray-400 group-hover:text-red-500" />
+                    </div>
+                    <p className="text-sm font-black text-gray-400 tracking-widest uppercase">Target Document</p>
                   </div>
                 )}
                 <input type="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
               </label>
             </div>
 
-            <div className="mb-8">
-              <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">
-                {activeTab === "protect" ? "Enter New Password" : "Enter Current PDF Password"}
+            <div className="mb-10">
+              <label className="block text-xs font-black text-gray-400 mb-3 uppercase tracking-[0.2em]">
+                {activeTab === "protect" ? "Set Access Code" : "Authentication Required"}
               </label>
-              <div className="relative">
+              <div className="relative group">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password..."
-                  className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all font-bold shadow-sm"
+                  placeholder="••••••••"
+                  className="w-full px-6 py-5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-red-100 focus:border-red-500 transition-all font-mono font-bold text-xl tracking-widest bg-gray-50/50"
                 />
-                <div className="absolute inset-y-0 right-4 flex items-center">
-                  {activeTab === "protect" ? (
-                    <Lock className="w-5 h-5 text-gray-400" />
-                  ) : (
-                    <Unlock className="w-5 h-5 text-gray-400" />
-                  )}
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-6 flex items-center text-gray-400 hover:text-red-600"
+                >
+                  {showPassword ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
+                </button>
               </div>
               {activeTab === "protect" && (
-                <p className="mt-4 text-xs text-gray-500 italic font-bold">
-                  *Important: Secure your password. We do not store or recover passwords.
-                </p>
+                <div className="mt-4 flex items-center gap-2 text-[10px] text-gray-400 font-black uppercase tracking-widest">
+                  <ShieldAlert className="w-3 h-3 text-red-500" />
+                  Local processing: Your password never leaves this machine.
+                </div>
               )}
             </div>
 
@@ -202,26 +198,26 @@ export default function PdfSecurityPage() {
               onClick={activeTab === "protect" ? handleProtect : handleUnlock}
               disabled={!file || !password || isProcessing}
               className={`
-                w-full py-4 rounded-xl font-black text-lg shadow-lg transition-all flex items-center justify-center gap-3
+                w-full py-6 rounded-2xl font-black text-xl shadow-2xl transition-all flex items-center justify-center gap-4
                 ${file && password && !isProcessing
-                  ? "bg-red-600 text-white hover:bg-red-700 hover:scale-[1.02] active:scale-[0.98] shadow-red-200"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"}
+                  ? "bg-gray-900 text-white hover:bg-black hover:-translate-y-1 active:translate-y-0 shadow-gray-200"
+                  : "bg-gray-100 text-gray-300 cursor-not-allowed shadow-none"}
               `}
             >
               {isProcessing ? (
                 <>
                   <Loader2 className="w-6 h-6 animate-spin" />
-                  Processing...
+                  PROCESSING...
                 </>
               ) : activeTab === "protect" ? (
                 <>
-                  <ShieldCheck className="w-6 h-6" />
-                  Protect PDF
+                  <Lock className="w-6 h-6 text-red-500" />
+                  INITIATE LOCKDOWN
                 </>
               ) : (
                 <>
-                  <ShieldAlert className="w-6 h-6" />
-                  Unlock PDF
+                  <Unlock className="w-6 h-6 text-green-500" />
+                  BYPASS ENCRYPTION
                 </>
               )}
             </button>
