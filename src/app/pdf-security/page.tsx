@@ -28,15 +28,30 @@ export default function PdfSecurityPage() {
   };
 
   const handleProtect = async () => {
-    if (!file || !password) return;
+    if (!file || !password) {
+      alert("Silakan pilih file dan masukkan password.");
+      return;
+    }
     setIsProcessing(true);
 
     try {
       const fileBytes = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(fileBytes);
       
-      // Protect the PDF with userPassword
-      const protectedPdfBytes = await pdfDoc.save({ userPassword: password } as any);
+      // Protect the PDF with userPassword, ownerPassword and restricted permissions
+      const protectedPdfBytes = await pdfDoc.save({ 
+        userPassword: password,
+        ownerPassword: password,
+        permissions: {
+          printing: 'highResolution',
+          modifying: false,
+          copying: false,
+          annotating: false,
+          fillingForms: false,
+          contentAccessibility: false,
+          documentAssembly: false
+        }
+      } as any);
       
       downloadPdf(protectedPdfBytes, `protected_${file.name}`);
     } catch (error) {
@@ -48,12 +63,16 @@ export default function PdfSecurityPage() {
   };
 
   const handleUnlock = async () => {
-    if (!file || !password) return;
+    if (!file || !password) {
+      alert("Silakan pilih file dan masukkan password.");
+      return;
+    }
     setIsProcessing(true);
 
     try {
       const fileBytes = await file.arrayBuffer();
       // Load PDF with the provided password
+      // If the password is wrong, PDFDocument.load will throw an error
       const pdfDoc = await PDFDocument.load(fileBytes, { password } as any);
       
       // Save without password to unlock it
@@ -62,7 +81,7 @@ export default function PdfSecurityPage() {
       downloadPdf(unlockedPdfBytes, `unlocked_${file.name}`);
     } catch (error) {
       console.error("Error unlocking PDF:", error);
-      alert("Gagal membuka PDF. Pastikan password yang Anda masukkan benar.");
+      alert("Gagal membuka PDF. Password yang Anda masukkan salah atau file tidak terenkripsi.");
     } finally {
       setIsProcessing(false);
     }
