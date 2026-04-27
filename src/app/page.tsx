@@ -1,4 +1,4 @@
-import { FileUp, FileDown, Minimize2, Image as ImageIcon, Shield, FileText, FileSpreadsheet } from "lucide-react";
+import { FileUp, FileDown, Minimize2, Image as ImageIcon, Shield, FileText, FileSpreadsheet, Presentation, FileType } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -50,6 +50,18 @@ export default function Home() {
       description: "Convert Excel spreadsheets to professional PDF tables instantly.",
       icon: <FileSpreadsheet className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
       href: "/excel-to-pdf",
+    },
+    {
+      title: "PowerPoint to PDF",
+      description: "Convert PPTX presentations to PDF while preserving slide content.",
+      icon: <Presentation className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/ppt-to-pdf",
+    },
+    {
+      title: "PDF to Word",
+      description: "Convert PDF documents to editable Microsoft Word files easily.",
+      icon: <FileType className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/pdf-to-word",
     },
   ];
 
