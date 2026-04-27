@@ -46,28 +46,59 @@ export default function WordToPdfPage() {
       container.style.width = "800px"; // Simulating A4 width roughly
       
       const contentElement = document.createElement("div");
-      contentElement.innerHTML = htmlContent;
-      contentElement.style.padding = "60px";
-      contentElement.style.fontFamily = "Arial, sans-serif";
-      contentElement.style.backgroundColor = "white";
-      contentElement.style.color = "black";
-      contentElement.style.lineHeight = "1.6";
       
-      // Basic styling for converted elements
-      contentElement.querySelectorAll("img").forEach(img => {
-        img.style.maxWidth = "100%";
-        img.style.height = "auto";
-      });
+      // Injecting professional CSS for better Word to PDF fidelity
+      const styleTemplate = `
+        <style>
+          .word-content {
+            font-family: 'Inter', 'Arial', sans-serif;
+            color: #1a1a1a;
+            line-height: 1.6;
+            font-size: 11pt;
+          }
+          .word-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+          }
+          .word-content th, .word-content td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+          }
+          .word-content th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+          }
+          .word-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+          }
+          .word-content p {
+            margin-bottom: 12px;
+          }
+          .word-content h1, .word-content h2, .word-content h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #000;
+          }
+        </style>
+      `;
+      
+      contentElement.innerHTML = `${styleTemplate}<div class="word-content">${htmlContent}</div>`;
 
       container.appendChild(contentElement);
       document.body.appendChild(container);
 
       // 3. Convert HTML to PDF using html2pdf.js
-      // Dynamic import to avoid SSR issues
       const html2pdf = (await import("html2pdf.js")).default;
       
       const opt = {
-        margin: 0,
+        margin: 15, // Wider margin (15mm)
         filename: `${file.name.replace(".docx", "")}.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { 
