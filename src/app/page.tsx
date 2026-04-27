@@ -1,7 +1,8 @@
 import { 
   FileUp, FileDown, Minimize2, Image as ImageIcon, Shield, 
   FileText, FileSpreadsheet, Presentation, FileType,
-  RotateCw, Trash2, Type, Hash
+  RotateCw, Trash2, Type, Hash,
+  PenTool, Palette, Stamp, Crop
 } from "lucide-react";
 import Link from "next/link";
 
@@ -90,6 +91,30 @@ export default function Home() {
       description: "Add automatic page numbers to your PDF document instantly.",
       icon: <Hash className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
       href: "/add-page-numbers",
+    },
+    {
+      title: "Sign PDF",
+      description: "Draw your signature and place it instantly on your PDF documents.",
+      icon: <PenTool className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/sign-pdf",
+    },
+    {
+      title: "PDF to Grayscale",
+      description: "Convert your PDF to black and white to save printer ink.",
+      icon: <Palette className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/pdf-to-grayscale",
+    },
+    {
+      title: "Overlay Image",
+      description: "Add a logo or stamp image on top of your PDF document.",
+      icon: <Stamp className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/overlay-image",
+    },
+    {
+      title: "Crop PDF",
+      description: "Trim page margins and adjust the visible area of your PDF.",
+      icon: <Crop className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/crop-pdf",
     },
   ];
 
