@@ -33,6 +33,12 @@ export default function Home() {
       icon: <Shield className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
       href: "/pdf-security",
     },
+    {
+      title: "PDF to Image",
+      description: "Convert each PDF page into a high-quality JPG image instantly.",
+      icon: <ImageIcon className="w-12 h-12 text-red-500 mb-5 group-hover:scale-110 transition-transform duration-300" />,
+      href: "/pdf-to-image",
+    },
   ];
 
   return (
