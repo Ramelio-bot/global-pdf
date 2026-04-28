@@ -42,7 +42,7 @@ export default function RootLayout({
               </Link>
               <nav className="hidden md:flex items-center gap-8">
                 <Link href="/" className="text-sm font-bold text-gray-600 hover:text-red-600 transition-colors">Home</Link>
-                <Link href="/blog" className="text-sm font-bold text-gray-600 hover:text-red-600 transition-colors">Blog</Link>
+                <Link href="/blog" className="text-sm font-bold text-gray-600 hover:text-red-600 transition-colors">Resources</Link>
                 <Link href="/about" className="text-sm font-bold text-gray-600 hover:text-red-600 transition-colors">About Us</Link>
                 <Link href="/privacy" className="text-sm font-bold text-gray-600 hover:text-red-600 transition-colors">Privacy Policy</Link>
               </nav>
@@ -73,8 +73,8 @@ export default function RootLayout({
                 <Link href="/contact" className="text-sm font-bold text-gray-600 hover:text-red-600 transition-colors">Contact</Link>
               </div>
               <div className="text-center md:text-right">
-                <p className="text-xs font-black text-gray-300 uppercase tracking-widest mb-2">Powered by</p>
-                <p className="text-sm font-black text-gray-900 italic tracking-tighter">PH Digipro & Ramelio Agro Global</p>
+                <p className="text-xs font-black text-gray-300 uppercase tracking-widest mb-2">Developed by</p>
+                <p className="text-sm font-black text-gray-900 italic tracking-tighter">PH Digipro</p>
               </div>
             </div>
           </div>

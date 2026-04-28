@@ -50,7 +50,7 @@ export default function PrivacyPage() {
             <section className="bg-gray-50 p-8 rounded-2xl border border-gray-200">
               <h2 className="text-xl font-bold text-gray-900 mb-4 tracking-tight">Compliance & Contact</h2>
               <p className="text-gray-600 leading-relaxed italic font-medium">
-                Our approach is designed to be inherently compliant with **GDPR** and **CCPA** by not collecting or storing personal data. If you have questions regarding our privacy practices, please contact us at <span className="text-red-600 font-bold">support@myinvoice.space</span>.
+                Our approach is designed to be inherently compliant with **GDPR** and **CCPA** by not collecting or storing personal data. If you have questions regarding our privacy practices, please contact us at <span className="text-red-600 font-bold">support@phdigipro.com</span>.
               </p>
             </section>
           </div>
