@@ -206,25 +206,6 @@ export default function Home() {
           </div>
         )}
       </main>
-
-      {/* Global Luxury Footer */}
-      <footer className="bg-white py-20 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="font-black text-3xl tracking-tighter text-gray-900 mb-6 italic flex items-center justify-center gap-3">
-            <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white not-italic text-sm">GP</div>
-            GLOBAL PDF
-          </div>
-          <p className="text-gray-500 font-bold text-base mb-2">
-            © 2026 Global PDF Tools. 100% Private & Secure.
-          </p>
-          <p className="text-gray-400 text-sm font-medium">100% Private & Secure Documents Processing.</p>
-          
-          <div className="flex justify-center gap-8 mt-10">
-            <Link href="/about" className="text-gray-400 hover:text-red-600 font-bold transition-colors">About Us</Link>
-            <Link href="/privacy" className="text-gray-400 hover:text-red-600 font-bold transition-colors">Privacy Policy</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

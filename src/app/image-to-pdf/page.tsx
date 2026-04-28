@@ -86,19 +86,6 @@ export default function ImageToPdfPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F5FA] flex flex-col font-sans text-gray-800">
-      <header className="w-full bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Back to Home</span>
-          </Link>
-          <div className="font-black text-xl tracking-tight text-gray-900">
-            Image to PDF
-          </div>
-          <div className="w-24"></div>
-        </div>
-      </header>
-
       <main className="flex-grow flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl w-full">
           <div className="text-center mb-10">
